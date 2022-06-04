@@ -1,15 +1,12 @@
-public class SubTask extends Task{
-    String nameOfTask;
-    String taskDescription;
-    int taskCode;
-    int codeOfEpicTask;
-    String status;
+public class SubTask extends Task {
+    private final int CODE_OF_EPIC_TASK;
 
-    public SubTask(String nameOfSubTask, String taskDescription, int taskCode, int codeOfEpicTask, String status) {
-        this.nameOfTask = nameOfSubTask;
-        this.taskDescription = taskDescription;
-        this.taskCode = taskCode;
-        this.status = status;
-        this.codeOfEpicTask = codeOfEpicTask;
+    public int getCodeOfEpicTask() {
+        return CODE_OF_EPIC_TASK;
+    }
+
+    public SubTask(String nameOfTask, String taskDescription, int taskCode, String status, int codeOfEpicTask) {
+        super(nameOfTask, taskDescription, taskCode, status);
+        this.CODE_OF_EPIC_TASK = codeOfEpicTask;
     }
 }

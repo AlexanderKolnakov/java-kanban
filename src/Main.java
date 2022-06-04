@@ -6,25 +6,34 @@ public class Main {
     public static void main(String[] args) {
 
         Manager manager = new Manager();
-        manager.addEpicTask("эпик 1", "что-то 1", 11);
-        manager.addEpicTask("эпик 2", "что-то 1", 22);
+        manager.addTask("Задача 1", "описание Задачи 1", 111, STATUS_DONE);
+        manager.addTask("Задача 2", "описание Задачи 2", 222, STATUS_NEW);
 
-        manager.addSubTask("саб 1", "что-то 3", 1, 11, STATUS_NEW);
-        manager.addSubTask("саб 2", "что-то 4",2, 11, STATUS_NEW);
-        manager.addSubTask("саб 3", "что-то 5",3, 22, STATUS_NEW);
+        manager.addEpicTask("Эпик_Задача 1", "описание Эпик_Задачи 1", 11);
+        manager.addEpicTask("Эпик_Задача 2", "описание Эпик_Задачи 2", 22);
 
+        manager.addSubTask("Подзадача 1 Эпик_Задачи 1", "описание Подзадачи 1", 1,
+                11, STATUS_NEW);
+        manager.addSubTask("Подзадача 2 Эпик_Задачи 1", "описание Подзадачи 2",
+                2, 11, STATUS_NEW);
+        manager.addSubTask("Подзадача 3 Эпик_Задачи 1", "описание Подзадачи 3",
+                3, 11, STATUS_NEW);
+        manager.addSubTask("Подзадача 4 Эпик_Задачи 2", "описание Подзадачи 4",
+                4, 22, STATUS_NEW);
+        manager.addSubTask("Подзадача 5 Эпик_Задачи 2", "описание Подзадачи 4",
+                5, 22, STATUS_NEW);
 
 
 //        проверка на изменение статуса епика при изменении статуса подзадач
 
-        /*System.out.println(manager.checkEpicStatus(11));
+        System.out.println(manager.checkEpicStatus(11));
         System.out.println(manager.subChangeStatus(2, STATUS_DONE));
         System.out.println(manager.checkEpicStatus(11));
         System.out.println(" ");
         System.out.println(manager.checkEpicStatus(11));
         System.out.println(manager.subChangeStatus(1, STATUS_DONE));
         System.out.println(manager.subChangeStatus(2, STATUS_DONE));
-        System.out.println(manager.checkEpicStatus(11));*/
+        System.out.println(manager.checkEpicStatus(11));
 
 
 //        проверка списка подзадач у конкретного эпика
@@ -32,26 +41,6 @@ public class Main {
         /*System.out.println(manager.showSubTaskToEpic(11));
         manager.deleteSubTask(2);
         System.out.println(manager.showSubTaskToEpic(11));*/
-
-
-
-
-//        System.out.println(manager.showEpicTask(11));
-//        System.out.println(manager.showSubTask(1));
-//        manager.deleteEpicTask(11);
-//
-//        System.out.println(" ");
-//
-//        System.out.println(manager.showAllTusk());
-//        manager.deleteSubTask(3);
-//        System.out.println(manager.showAllTusk());
-//        System.out.println(manager.updateSubTask("саб нов", 1, 11, "In"));
-
-
-
-
-
-//        System.out.println(manager.showAllTusk());
 
     }
 }
