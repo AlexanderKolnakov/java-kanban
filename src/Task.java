@@ -1,13 +1,13 @@
 public class Task {
     protected String nameOfTask;
     protected String taskDescription;
-    protected int taskCode = 0;
+    protected int taskCode;
     protected String status;
 
-    public Task(String nameOfTask, String taskDescription, String status) {
+    public Task(String nameOfTask, String taskDescription, int taskCode, String status) {
         this.nameOfTask = nameOfTask;
         this.taskDescription = taskDescription;
-        this.taskCode = ++taskCode;
+        this.taskCode = taskCode;
         this.status = status;
     }
 }

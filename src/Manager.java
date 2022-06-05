@@ -2,28 +2,34 @@ import java.util.*;
 
 public class Manager {
     HashMap<Integer, Task> dataTask = new HashMap<>();
+    private int taskScore = 0;
     HashMap<Integer, EpicTask> dataEpicTask = new HashMap<>();
+    private int epicTaskScore = 0;
     HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
+    private int subTaskScore = 0;
 
-    public Task addTask(String nameOfTask, String taskDescription, int taskCode, String status) {
-        Task task = new Task(nameOfTask, taskDescription, taskCode, status);
-        dataTask.put(taskCode, task);
+    public Task addTask(String nameOfTask, String taskDescription, String status) {
+        taskScore ++;
+        Task task = new Task(nameOfTask, taskDescription, taskScore, status);
+        dataTask.put(taskScore, task);
         return task;
     }
 
-    public EpicTask addEpicTask(String nameOfTask, String taskDescription, int taskCode) {
-        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskCode);
-        dataEpicTask.put(taskCode, epicTask);
+    public EpicTask addEpicTask(String nameOfTask, String taskDescription) {
+        epicTaskScore ++;
+        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, epicTaskScore);
+        dataEpicTask.put(epicTaskScore, epicTask);
         return epicTask;
     }
 
-    public SubTask addSubTask(String nameOfSubTask, String taskDescription, int taskCode, int codeOfEpicTask,
+    public SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
                               String status) {
-        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskCode, status, codeOfEpicTask);
+        subTaskScore ++;
+        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, subTaskScore, status, codeOfEpicTask);
         if (dataEpicTask.containsKey(codeOfEpicTask)) {
             dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
         }
-        dataSubTask.put(taskCode, subTask);
+        dataSubTask.put(subTaskScore, subTask);
         return subTask;
     }
 
@@ -100,23 +106,29 @@ public class Manager {
         return dataSubTask;
     }
 
-    public Task updateTask(String nameOfTask, String taskDescription, int taskCode, String status) {
-        dataTask.remove(taskCode);
-        return addTask(nameOfTask, taskDescription, taskCode, status);
+    public Task updateTask(String newNameOfTask, String newTaskDescription, int taskCode, String newStatus) {
+        dataTask.get(taskCode).nameOfTask = newNameOfTask;
+        dataTask.get(taskCode).taskDescription = newTaskDescription;
+        dataTask.get(taskCode).status = newStatus;
+        return dataTask.get(taskCode);
     }
 
-    public EpicTask updateEpicTask(String nameOfTask, String taskDescription, int taskCode) {
-        dataEpicTask.remove(taskCode);
-        return addEpicTask(nameOfTask, taskDescription, taskCode);
+    public EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode) {
+        dataEpicTask.get(taskCode).nameOfTask = newNameOfTask;
+        dataEpicTask.get(taskCode).taskDescription = newTaskDescription;
+        return dataEpicTask.get(taskCode);
     }
 
-    public SubTask updateSubTask(String nameOfSubTask, String taskDescription, int taskCode, int codeOfEpicTask,
-                                 String status) {
+    public SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
+                                 String newStatus) {
+        dataSubTask.get(taskCode).nameOfTask = newNameOfSubTask;
+        dataSubTask.get(taskCode).taskDescription = newTaskDescription;
+        dataSubTask.get(taskCode).status = newStatus;
         if (dataEpicTask.containsKey(codeOfEpicTask)) {
             dataEpicTask.get(codeOfEpicTask).deleteSubTask(dataSubTask.get(taskCode));
+            dataEpicTask.get(codeOfEpicTask).listOfSubTasks.add(dataSubTask.get(taskCode));
         }
-        dataSubTask.remove(taskCode);
-        return addSubTask(nameOfSubTask, taskDescription, taskCode, codeOfEpicTask, status);
+        return dataSubTask.get(taskCode);
     }
 
     public List<SubTask> showSubTaskToEpic(int codeOfTask) {

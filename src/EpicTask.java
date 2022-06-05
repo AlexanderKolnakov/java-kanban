@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class EpicTask extends Task {
 
-    ArrayList<SubTask> listOfSubTasks = new ArrayList<>();
+     ArrayList<SubTask> listOfSubTasks = new ArrayList<>();
 
 
     public EpicTask(String nameOfTask, String taskDescription, int taskCode) {
