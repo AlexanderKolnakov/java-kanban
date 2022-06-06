@@ -2,9 +2,9 @@ public class Task {
     protected String nameOfTask;
     protected String taskDescription;
     protected int taskCode;
-    protected String status;
+    protected Status status;
 
-    public Task(String nameOfTask, String taskDescription, int taskCode, String status) {
+    public Task(String nameOfTask, String taskDescription, int taskCode, Status status) {
         this.nameOfTask = nameOfTask;
         this.taskDescription = taskDescription;
         this.taskCode = taskCode;

@@ -8,7 +8,7 @@ public class Manager {
     HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
     private int subTaskScore = 0;
 
-    public Task addTask(String nameOfTask, String taskDescription, String status) {
+    public Task addTask(String nameOfTask, String taskDescription, Status status) {
         taskScore ++;
         Task task = new Task(nameOfTask, taskDescription, taskScore, status);
         dataTask.put(taskScore, task);
@@ -23,7 +23,7 @@ public class Manager {
     }
 
     public SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
-                              String status) {
+                              Status status) {
         subTaskScore ++;
         SubTask subTask = new SubTask(nameOfSubTask, taskDescription, subTaskScore, status, codeOfEpicTask);
         if (dataEpicTask.containsKey(codeOfEpicTask)) {
@@ -106,7 +106,7 @@ public class Manager {
         return dataSubTask;
     }
 
-    public Task updateTask(String newNameOfTask, String newTaskDescription, int taskCode, String newStatus) {
+    public Task updateTask(String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus) {
         dataTask.get(taskCode).nameOfTask = newNameOfTask;
         dataTask.get(taskCode).taskDescription = newTaskDescription;
         dataTask.get(taskCode).status = newStatus;
@@ -120,7 +120,7 @@ public class Manager {
     }
 
     public SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
-                                 String newStatus) {
+                                 Status newStatus) {
         dataSubTask.get(taskCode).nameOfTask = newNameOfSubTask;
         dataSubTask.get(taskCode).taskDescription = newTaskDescription;
         dataSubTask.get(taskCode).status = newStatus;
@@ -141,31 +141,26 @@ public class Manager {
         return subTuskList;
     }
 
-    public String taskChangeStatus(int codeOfTask, String status) {
+    public Status taskChangeStatus(int codeOfTask, Status status) {
         return dataTask.get(codeOfTask).status = status;
     }
 
-    public String subChangeStatus(int codeOfTask, String newStatus) {
+    public Status subChangeStatus(int codeOfTask, Status newStatus) {
         dataSubTask.get(codeOfTask).status = newStatus;
-        Set<String> statusList = new HashSet<>();
-        Set<String> statusListNew = new HashSet<>(Collections.singleton("NEW"));
-        Set<String> statusListDONE = new HashSet<>(Collections.singleton("DONE"));
-
+        Set<Status> statusList = new HashSet<>();
         for (SubTask subTask : dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).listOfSubTasks) {
             statusList.add(subTask.status);
         }
-        if (statusList.equals(statusListNew)) {
-            dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).status = "NEW";
-        } else if (statusList.equals(statusListDONE)) {
-            dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).status = "DONE";
+        if (statusList.size() > 1) {
+            dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).status = Status.IN_PROGRESS;
         } else {
-            dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).status = "IN_PROGRESS";
+            dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).status = dataSubTask.get(codeOfTask).status;
         }
         statusList.clear();
         return dataSubTask.get(codeOfTask).status;
     }
 
-    public String checkEpicStatus(int codeOfTask) {
+    public Status checkEpicStatus(int codeOfTask) {
         return dataEpicTask.get(codeOfTask).status;
     }
 }

@@ -6,7 +6,7 @@ public class EpicTask extends Task {
 
 
     public EpicTask(String nameOfTask, String taskDescription, int taskCode) {
-        super(nameOfTask, taskDescription, taskCode, "NEW");
+        super(nameOfTask, taskDescription, taskCode, Status.NEW);
     }
 
     public void addSubTask(SubTask subTask) {
