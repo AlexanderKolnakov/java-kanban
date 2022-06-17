@@ -42,4 +42,6 @@ public interface TaskManager {
     Status subChangeStatus(int codeOfTask, Status newStatus);
 
     Status checkEpicStatus(int codeOfTask);
+
+    List<Task> getHistory();
 }

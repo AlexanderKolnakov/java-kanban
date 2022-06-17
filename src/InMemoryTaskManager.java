@@ -167,4 +167,8 @@ public class InMemoryTaskManager implements TaskManager {
     public Status checkEpicStatus(int codeOfTask) {
         return dataEpicTask.get(codeOfTask).status;
     }
+    @Override
+    public List<Task> getHistory() {
+        return Managers.getDefaultHistory().getHistory();
+    }
 }
