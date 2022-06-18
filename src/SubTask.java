@@ -9,4 +9,13 @@ public class SubTask extends Task {
         super(nameOfTask, taskDescription, taskCode, status);
         this.CODE_OF_EPIC_TASK = codeOfEpicTask;
     }
+
+    @Override
+    public String toString() {
+        return "SubTask {" +
+                "Имя подзадачи - '" + nameOfTask + '\'' +
+                ", Описание подзадачи - '" + taskDescription + '\'' +
+                ", Статус подзадачи - " + status +
+                '}';
+    }
 }

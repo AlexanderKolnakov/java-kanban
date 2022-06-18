@@ -16,4 +16,14 @@ public class EpicTask extends Task {
     public void deleteSubTask(SubTask subTask) {
         listOfSubTasks.remove(subTask);
     }
+
+    @Override
+    public String toString() {
+        return "EpicTask {" +
+                "Список задач :" + listOfSubTasks +
+                "Имя задачи -'" + nameOfTask + '\'' +
+                ", Описание задачи -'" + taskDescription + '\'' +
+                ", Статус задачи -" + status +
+                '}';
+    }
 }

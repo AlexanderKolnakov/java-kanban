@@ -35,16 +35,17 @@ public class Main {
 
 
 //        проверка списка подзадач у конкретного эпика
-        /*System.out.println(manager.showSubTaskToEpic(1));
+
+        System.out.println(manager.showSubTaskToEpic(1));
         manager.deleteSubTask(2);
-        System.out.println(manager.showSubTaskToEpic(1));*/
+        System.out.println(manager.showSubTaskToEpic(1));
 
 
 //        проверка метода getHistory()
 
         /*manager.showTask(1);
         System.out.println(manager.getHistory());
-        System.out.println("/n");
+        System.out.println("\n");
         manager.showEpicTask(1);
         manager.showEpicTask(1);
         manager.showSubTask(1);
@@ -62,7 +63,6 @@ public class Main {
         manager.showSubTask(1);
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());*/
-
 
 
     }

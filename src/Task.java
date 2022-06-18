@@ -10,5 +10,14 @@ public class Task {
         this.taskCode = taskCode;
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "Task {" +
+                "Имя задачи'" + nameOfTask + '\'' +
+                ", Описание задачи - '" + taskDescription + '\'' +
+                ", Статус задачи - " + status +
+                '}';
+    }
 }
 
