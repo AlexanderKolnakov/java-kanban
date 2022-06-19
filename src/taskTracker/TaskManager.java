@@ -1,3 +1,5 @@
+package taskTracker;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,11 +39,11 @@ public interface TaskManager {
 
     List<SubTask> showSubTaskToEpic(int codeOfTask);
 
-    Status taskChangeStatus(int codeOfTask, Status status);
+    Task taskChangeStatus(int codeOfTask, Status status);
 
-    Status subChangeStatus(int codeOfTask, Status newStatus);
+    SubTask subChangeStatus(int codeOfTask, Status newStatus);
 
-    Status checkEpicStatus(int codeOfTask);
+    EpicTask checkEpicStatus(int codeOfTask);
 
     List<Task> getHistory();
 }

@@ -1,4 +1,6 @@
-import java.util.ArrayList;
+package taskTracker;
+
+import java.util.ArrayList;  // используется в строке для ведения листа с подзадачами у эпика (строка 5)
 
 public class EpicTask extends Task {
 
@@ -19,7 +21,7 @@ public class EpicTask extends Task {
 
     @Override
     public String toString() {
-        return "EpicTask {" +
+        return "taskTracker.Managers.taskTracker.EpicTask {" +
                 "Список задач :" + listOfSubTasks +
                 "Имя задачи -'" + nameOfTask + '\'' +
                 ", Описание задачи -'" + taskDescription + '\'' +

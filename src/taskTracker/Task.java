@@ -1,3 +1,5 @@
+package taskTracker;
+
 public class Task {
     protected String nameOfTask;
     protected String taskDescription;
@@ -13,7 +15,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task {" +
+        return "taskTracker.Task {" +
                 "Имя задачи'" + nameOfTask + '\'' +
                 ", Описание задачи - '" + taskDescription + '\'' +
                 ", Статус задачи - " + status +

@@ -1,3 +1,5 @@
+package taskTracker;
+
 public class SubTask extends Task {
     private final int CODE_OF_EPIC_TASK;
 
@@ -12,7 +14,7 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "SubTask {" +
+        return "taskTracker.SubTask {" +
                 "Имя подзадачи - '" + nameOfTask + '\'' +
                 ", Описание подзадачи - '" + taskDescription + '\'' +
                 ", Статус подзадачи - " + status +

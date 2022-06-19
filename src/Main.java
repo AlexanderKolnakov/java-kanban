@@ -1,3 +1,7 @@
+import taskTracker.Managers;
+import taskTracker.Status;
+import taskTracker.TaskManager;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -36,9 +40,33 @@ public class Main {
 
 //        проверка списка подзадач у конкретного эпика
 
-        System.out.println(manager.showSubTaskToEpic(1));
+        /*System.out.println(manager.showSubTaskToEpic(1));
         manager.deleteSubTask(2);
-        System.out.println(manager.showSubTaskToEpic(1));
+        System.out.println(manager.showSubTaskToEpic(1));*/
+
+
+//        проверка на изменение имени, описания и статуса задач
+
+        /*System.out.println(manager.updateTask("новое имя", "новое описание",
+                122, Status.DONE));
+        System.out.println(manager.updateTask("новое имя", "новое описание",
+                1, Status.DONE));
+        System.out.println(manager.updateEpicTask("новое имя", "новое описание",
+                122));
+        System.out.println(manager.updateEpicTask("новое имя", "новое описание",
+                1));
+        System.out.println(manager.updateSubTask("новое имя", "новое описание",
+                122, 122, Status.DONE));
+        System.out.println(manager.updateSubTask("новое имя", "новое описание",
+                1, 1, Status.DONE));*/
+
+
+//        проверка на изменение статуса задач
+
+        /*System.out.println(manager.taskChangeStatus(122, Status.IN_PROGRESS));
+        System.out.println(manager.taskChangeStatus(1, Status.IN_PROGRESS));
+        System.out.println(manager.subChangeStatus(122, Status.DONE));
+        System.out.println(manager.subChangeStatus(1, Status.DONE));*/
 
 
 //        проверка метода getHistory()
@@ -63,7 +91,5 @@ public class Main {
         manager.showSubTask(1);
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());*/
-
-
     }
 }

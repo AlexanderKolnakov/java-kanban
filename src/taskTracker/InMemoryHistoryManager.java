@@ -1,7 +1,9 @@
+package taskTracker;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryHistoryManager implements  HistoryManager {
+public class InMemoryHistoryManager implements HistoryManager {
     static List<Task> dataRequest = new ArrayList<>();
     @Override
     public void addHistory(Task task) {
