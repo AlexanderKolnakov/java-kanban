@@ -9,6 +9,7 @@ public class InMemoryTaskManager implements TaskManager {
     private int epicTaskScore = 0;
     HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
     private int subTaskScore = 0;
+    HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
     public Task addTask(String nameOfTask, String taskDescription, Status status) {
@@ -55,36 +56,45 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task showTask(int codeOfTask) {
-        Managers.getDefaultHistory().addHistory(dataTask.get(codeOfTask));
+        historyManager.addHistory(dataTask.get(codeOfTask)); //
         return dataTask.get(codeOfTask);
     }
 
     @Override
     public EpicTask showEpicTask(int codeOfTask) {
-        Managers.getDefaultHistory().addHistory(dataEpicTask.get(codeOfTask));
+        historyManager.addHistory(dataEpicTask.get(codeOfTask));  //
         return dataEpicTask.get(codeOfTask);
     }
 
     @Override
     public SubTask showSubTask(int codeOfTask) {
-        Managers.getDefaultHistory().addHistory(dataSubTask.get(codeOfTask));
+        historyManager.addHistory(dataSubTask.get(codeOfTask));  //
         return dataSubTask.get(codeOfTask);
     }
 
     @Override
     public HashMap<Integer, Task> deleteAllTask() {
+        for (Map.Entry<Integer, Task> task : dataTask.entrySet()) {
+            historyManager.remove(task.getValue().taskCode);  //
+        }
         dataTask.clear();
         return dataTask;
     }
 
     @Override
     public HashMap<Integer, EpicTask> deleteAllEpicTask() {
+        for (Map.Entry<Integer, EpicTask> task : dataEpicTask.entrySet()) {
+            historyManager.remove(task.getValue().taskCode);  //
+        }
         dataEpicTask.clear();
         return dataEpicTask;
     }
 
     @Override
     public HashMap<Integer, SubTask> deleteAllSubTask() {
+        for (Map.Entry<Integer, SubTask> task : dataSubTask.entrySet()) {
+            historyManager.remove(task.getValue().taskCode);  //
+        }
         dataSubTask.clear();
         for (Map.Entry<Integer, EpicTask> pair : dataEpicTask.entrySet()) {
             pair.getValue().listOfSubTasks.clear();
@@ -94,6 +104,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public HashMap<Integer, Task> deleteTask(int codeOfTask) {
+        historyManager.remove(codeOfTask);  //
         dataTask.remove(codeOfTask);
         return dataTask;
     }
@@ -106,6 +117,7 @@ public class InMemoryTaskManager implements TaskManager {
                 return deleteEpicTask(codeOfTask);
             }
         }
+        historyManager.remove(codeOfTask);   //
         dataEpicTask.remove(codeOfTask);
         return dataEpicTask;
     }
@@ -120,6 +132,7 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             }
         }
+        historyManager.remove(codeOfTask);  //
         dataSubTask.remove(codeOfTask);
         return dataSubTask;
     }
@@ -207,6 +220,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-        return Managers.getDefaultHistory().getHistory();
+
+        return historyManager.getHistory();
+//        return Managers.getDefaultHistory().getHistory();
     }
 }

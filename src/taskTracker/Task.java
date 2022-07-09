@@ -21,5 +21,9 @@ public class Task {
                 ", Статус задачи - " + status +
                 '}';
     }
+
+    public int getTaskCode() {
+        return taskCode;
+    }
 }
 

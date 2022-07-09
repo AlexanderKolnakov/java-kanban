@@ -24,6 +24,13 @@ public class Main {
         manager.addSubTask("Подзадача 5 Эпик_Задачи 2", "описание Подзадачи 4",
                 2, Status.NEW);
 
+        
+
+
+
+
+
+
 
 //        проверка на изменение статуса епика при изменении статуса подзадач
 
@@ -91,5 +98,24 @@ public class Main {
         manager.showSubTask(1);
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());*/
+
+
+
+
+//        manager.showEpicTask(1);
+//        manager.showEpicTask(2);
+        manager.showTask(1);
+        manager.showTask(1);
+        manager.showTask(2);
+        manager.showTask(2);
+        System.out.println(manager.getHistory());
+        System.out.println(manager.getHistory().size());
+        System.out.println("\n");
+//        manager.deleteTask(2);
+        manager.deleteAllTask();
+//        manager.deleteSubTask(2);
+//        manager.deleteEpicTask(2);
+        System.out.println(manager.getHistory());
+        System.out.println(manager.getHistory().size());
     }
 }
