@@ -3,41 +3,25 @@ package taskTracker;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-//    static List<Task> dataRequest = new ArrayList<>();
     protected CustomLinkedList<Task> dataRequest = new CustomLinkedList<>();
 
     @Override
     public void addHistory(Task task) {
-//        dataRequest.add(task);
-//        if (dataRequest.size() > 10) {
-//            dataRequest.remove(0);
-//        }
-
         dataRequest.addLast(task, task.taskCode);
     }
 
     @Override
     public void remove(int taskCode) {
-
-        dataRequest.removeT(taskCode);
-
-//        List<Task> removeTask = new ArrayList<>();
-//        for (Task task : dataRequest.getTasks()) {
-//            if (task.taskCode == taskCode) {
-//                removeTask.add(task);
-//            }
-//        }
-
-
-//        dataRequest.getTasks().r
-//        dataRequest.getTasks().removeAll(removeTask);
-//        dataRequest.addLast();
-
+        if (!dataRequest.isEmpty()) {
+            dataRequest.removeT(taskCode);
+        }
     }
 
     @Override
     public List<Task> getHistory() {
-        return dataRequest.getTasks();
+        if (!dataRequest.isEmpty()) {
+            return dataRequest.getTasks();
+        } return null;
     }
 
     public static class CustomLinkedList<T> {
@@ -60,8 +44,14 @@ public class InMemoryHistoryManager implements HistoryManager {
         public void add (Integer taskCode, Node<T> task) {
             nodeMap.put(taskCode, task);
         }
+        public boolean isEmpty() {
+            return nodeMap.isEmpty();
+        }
 
         public void addLast(T task, Integer taskCode) {
+            if (nodeMap.containsKey(taskCode)) {
+                removeT(taskCode);
+            }
             final Node<T> oldTail = tail;
             final Node<T> newNode = new Node<>(oldTail, task, null);
             tail = newNode;

@@ -6,9 +6,7 @@ public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> dataTask = new HashMap<>();
     private int taskScore = 0;
     HashMap<Integer, EpicTask> dataEpicTask = new HashMap<>();
-    private int epicTaskScore = 0;
     HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
-    private int subTaskScore = 0;
     HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
@@ -21,21 +19,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public EpicTask addEpicTask(String nameOfTask, String taskDescription) {
-        epicTaskScore++;
-        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, epicTaskScore);
-        dataEpicTask.put(epicTaskScore, epicTask);
+        taskScore++;
+        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskScore);
+        dataEpicTask.put(taskScore, epicTask);
         return epicTask;
     }
 
     @Override
     public SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
                               Status status) {
-        subTaskScore++;
-        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, subTaskScore, status, codeOfEpicTask);
+        taskScore++;
+        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskScore, status, codeOfEpicTask);
         if (dataEpicTask.containsKey(codeOfEpicTask)) {
             dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
         }
-        dataSubTask.put(subTaskScore, subTask);
+        dataSubTask.put(taskScore, subTask);
         return subTask;
     }
 
@@ -220,8 +218,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-
         return historyManager.getHistory();
-//        return Managers.getDefaultHistory().getHistory();
     }
 }

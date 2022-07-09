@@ -7,22 +7,22 @@ public class Main {
 
         TaskManager manager = new Managers().getDefault();
 
-        manager.addTask("Задача 1", "описание Задачи 1", Status.DONE);
-        manager.addTask("Задача 2", "описание Задачи 2", Status.DONE);
+        manager.addTask("Задача 1", "описание Задачи 1", Status.DONE);  // taskCode = 1
+        manager.addTask("Задача 2", "описание Задачи 2", Status.DONE);  // taskCode = 2
 
-        manager.addEpicTask("Эпик_Задача 1", "описание Эпик_Задачи 1");
-        manager.addEpicTask("Эпик_Задача 2", "описание Эпик_Задачи 2");
+        manager.addEpicTask("Эпик_Задача 1", "описание Эпик_Задачи 3");  // taskCode = 3
+        manager.addEpicTask("Эпик_Задача 2", "описание Эпик_Задачи 4");  // taskCode = 4
 
-        manager.addSubTask("Подзадача 1 Эпик_Задачи 1", "описание Подзадачи 1",
-                1, Status.NEW);
-        manager.addSubTask("Подзадача 2 Эпик_Задачи 1", "описание Подзадачи 2",
-                1, Status.NEW);
-        manager.addSubTask("Подзадача 3 Эпик_Задачи 1", "описание Подзадачи 3",
-                1, Status.NEW);
-        manager.addSubTask("Подзадача 4 Эпик_Задачи 2", "описание Подзадачи 4",
-                2, Status.NEW);
-        manager.addSubTask("Подзадача 5 Эпик_Задачи 2", "описание Подзадачи 4",
-                2, Status.NEW);
+        manager.addSubTask("Подзадача 5 Эпик_Задачи 3", "описание Подзадачи 5",
+                3, Status.NEW);  // taskCode = 5
+        manager.addSubTask("Подзадача 6 Эпик_Задачи 3", "описание Подзадачи 6",
+                3, Status.NEW);  // taskCode = 6
+        manager.addSubTask("Подзадача 7 Эпик_Задачи 3", "описание Подзадачи 7",
+                3, Status.NEW);  // taskCode = 7
+        manager.addSubTask("Подзадача 8 Эпик_Задачи 4", "описание Подзадачи 8",
+                4, Status.NEW);  // taskCode = 8
+        manager.addSubTask("Подзадача 9 Эпик_Задачи 4", "описание Подзадачи 9",
+                4, Status.NEW);  // taskCode = 9
 
         
 
@@ -34,22 +34,22 @@ public class Main {
 
 //        проверка на изменение статуса епика при изменении статуса подзадач
 
-        /*System.out.println(manager.checkEpicStatus(1));
-        System.out.println(manager.subChangeStatus(2, Status.DONE));
-        System.out.println(manager.checkEpicStatus(1));
+        /*System.out.println(manager.checkEpicStatus(3));
+        System.out.println(manager.subChangeStatus(6, Status.DONE));
+        System.out.println(manager.checkEpicStatus(3));
         System.out.println(" ");
-        System.out.println(manager.checkEpicStatus(1));
-        System.out.println(manager.subChangeStatus(1, Status.DONE));
-        System.out.println(manager.subChangeStatus(2, Status.DONE));
-        System.out.println(manager.subChangeStatus(3, Status.DONE));
-        System.out.println(manager.checkEpicStatus(1));*/
+        System.out.println(manager.checkEpicStatus(3));
+        System.out.println(manager.subChangeStatus(5, Status.DONE));
+        System.out.println(manager.subChangeStatus(6, Status.DONE));
+        System.out.println(manager.subChangeStatus(7, Status.DONE));
+        System.out.println(manager.checkEpicStatus(3));*/
 
 
 //        проверка списка подзадач у конкретного эпика
 
-        /*System.out.println(manager.showSubTaskToEpic(1));
-        manager.deleteSubTask(2);
-        System.out.println(manager.showSubTaskToEpic(1));*/
+        /*System.out.println(manager.showSubTaskToEpic(3));
+        manager.deleteSubTask(6);
+        System.out.println(manager.showSubTaskToEpic(3));*/
 
 
 //        проверка на изменение имени, описания и статуса задач
@@ -61,11 +61,11 @@ public class Main {
         System.out.println(manager.updateEpicTask("новое имя", "новое описание",
                 122));
         System.out.println(manager.updateEpicTask("новое имя", "новое описание",
-                1));
+                3));
         System.out.println(manager.updateSubTask("новое имя", "новое описание",
                 122, 122, Status.DONE));
         System.out.println(manager.updateSubTask("новое имя", "новое описание",
-                1, 1, Status.DONE));*/
+                6, 3, Status.DONE));*/
 
 
 //        проверка на изменение статуса задач
@@ -73,49 +73,46 @@ public class Main {
         /*System.out.println(manager.taskChangeStatus(122, Status.IN_PROGRESS));
         System.out.println(manager.taskChangeStatus(1, Status.IN_PROGRESS));
         System.out.println(manager.subChangeStatus(122, Status.DONE));
-        System.out.println(manager.subChangeStatus(1, Status.DONE));*/
+        System.out.println(manager.subChangeStatus(6, Status.DONE));*/
 
 
 //        проверка метода getHistory()
 
         /*manager.showTask(1);
         System.out.println(manager.getHistory());
+        System.out.println(manager.getHistory().size());
         System.out.println("\n");
-        manager.showEpicTask(1);
-        manager.showEpicTask(1);
-        manager.showSubTask(1);
-        manager.showEpicTask(1);
-        manager.showEpicTask(1);
-        manager.showEpicTask(1);
-        manager.showSubTask(1);
-        manager.showEpicTask(1);
-        manager.showEpicTask(1);
-        manager.showEpicTask(1);
-        manager.showSubTask(1);
-        manager.showEpicTask(1);
-        manager.showEpicTask(1);
-        manager.showEpicTask(1);
-        manager.showSubTask(1);
+        manager.showEpicTask(3);
+        manager.showEpicTask(3);
+        manager.showSubTask(6);
+        manager.showEpicTask(3);
+        manager.showEpicTask(3);
+        manager.showEpicTask(3);
+        manager.showSubTask(6);
+        manager.showEpicTask(3);
+        manager.showEpicTask(3);
+        manager.showEpicTask(3);
+        manager.showSubTask(6);
+        manager.showEpicTask(3);
+        manager.showEpicTask(3);
+        manager.showEpicTask(3);
+        manager.showSubTask(6);
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());*/
 
 
+//        проверка метода getHistory() и удаление задач delete
 
-
-//        manager.showEpicTask(1);
-//        manager.showEpicTask(2);
-        manager.showTask(1);
-        manager.showTask(1);
-        manager.showTask(2);
-        manager.showTask(2);
+        /*manager.showTask(1);
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());
-        System.out.println("\n");
-//        manager.deleteTask(2);
-        manager.deleteAllTask();
-//        manager.deleteSubTask(2);
-//        manager.deleteEpicTask(2);
+        manager.showEpicTask(3);
+        manager.showEpicTask(3);
+        manager.showSubTask(6);
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());
+        manager.deleteSubTask(6);
+        System.out.println(manager.getHistory());
+        System.out.println(manager.getHistory().size());*/
     }
 }

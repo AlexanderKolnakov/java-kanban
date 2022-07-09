@@ -1,6 +1,5 @@
 package taskTracker;
-
-import java.util.ArrayList;  // используется в строке для ведения листа с подзадачами у эпика (строка 5)
+import java.util.ArrayList;
 
 public class EpicTask extends Task {
 
