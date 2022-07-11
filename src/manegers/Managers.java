@@ -1,4 +1,7 @@
-package taskTracker;
+package manegers;
+
+import interfaces.HistoryManager;
+import interfaces.TaskManager;
 
 public class Managers {
 

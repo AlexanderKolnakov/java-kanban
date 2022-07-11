@@ -1,4 +1,12 @@
-package taskTracker;
+package manegers;
+
+import interfaces.HistoryManager;
+import interfaces.TaskManager;
+import manegers.Managers;
+import taskTracker.EpicTask;
+import taskTracker.Status;
+import taskTracker.SubTask;
+import taskTracker.Task;
 
 import java.util.*;
 
@@ -28,6 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
                               Status status) {
+        if(!dataEpicTask.containsKey(codeOfEpicTask)) return null;
         taskScore++;
         SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskScore, status, codeOfEpicTask);
         if (dataEpicTask.containsKey(codeOfEpicTask)) {
@@ -41,39 +50,42 @@ public class InMemoryTaskManager implements TaskManager {
     public List<String> showAllTusk() {
         List<String> tuskList = new ArrayList<>();
         for (Map.Entry<Integer, EpicTask> pair : dataEpicTask.entrySet()) {
-            tuskList.add(pair.getValue().nameOfTask);
+            tuskList.add(pair.getValue().getName());
         }
         for (Map.Entry<Integer, SubTask> pair : dataSubTask.entrySet()) {
-            tuskList.add(pair.getValue().nameOfTask);
+            tuskList.add(pair.getValue().getName());
         }
         for (Map.Entry<Integer, Task> pair : dataTask.entrySet()) {
-            tuskList.add(pair.getValue().nameOfTask);
+            tuskList.add(pair.getValue().getName());
         }
         return tuskList;
     }
 
     @Override
     public Task showTask(int codeOfTask) {
-        historyManager.addHistory(dataTask.get(codeOfTask)); //
+        if(!dataTask.containsKey(codeOfTask)) return null;
+        historyManager.addHistory(dataTask.get(codeOfTask));
         return dataTask.get(codeOfTask);
     }
 
     @Override
     public EpicTask showEpicTask(int codeOfTask) {
-        historyManager.addHistory(dataEpicTask.get(codeOfTask));  //
+        if(!dataEpicTask.containsKey(codeOfTask)) return null;
+        historyManager.addHistory(dataEpicTask.get(codeOfTask));
         return dataEpicTask.get(codeOfTask);
     }
 
     @Override
     public SubTask showSubTask(int codeOfTask) {
-        historyManager.addHistory(dataSubTask.get(codeOfTask));  //
+        if(!dataSubTask.containsKey(codeOfTask)) return null;
+        historyManager.addHistory(dataSubTask.get(codeOfTask));
         return dataSubTask.get(codeOfTask);
     }
 
     @Override
     public HashMap<Integer, Task> deleteAllTask() {
         for (Map.Entry<Integer, Task> task : dataTask.entrySet()) {
-            historyManager.remove(task.getValue().taskCode);  //
+            historyManager.remove(task.getValue().getTaskCode());
         }
         dataTask.clear();
         return dataTask;
@@ -82,7 +94,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public HashMap<Integer, EpicTask> deleteAllEpicTask() {
         for (Map.Entry<Integer, EpicTask> task : dataEpicTask.entrySet()) {
-            historyManager.remove(task.getValue().taskCode);  //
+            historyManager.remove(task.getValue().getTaskCode());
         }
         dataEpicTask.clear();
         return dataEpicTask;
@@ -91,56 +103,60 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public HashMap<Integer, SubTask> deleteAllSubTask() {
         for (Map.Entry<Integer, SubTask> task : dataSubTask.entrySet()) {
-            historyManager.remove(task.getValue().taskCode);  //
+            historyManager.remove(task.getValue().getTaskCode());
         }
         dataSubTask.clear();
         for (Map.Entry<Integer, EpicTask> pair : dataEpicTask.entrySet()) {
-            pair.getValue().listOfSubTasks.clear();
+            pair.getValue().removeAllListOfSubTasks();
         }
         return dataSubTask;
     }
 
     @Override
     public HashMap<Integer, Task> deleteTask(int codeOfTask) {
-        historyManager.remove(codeOfTask);  //
+        if(!dataTask.containsKey(codeOfTask)) return null;
+        historyManager.remove(codeOfTask);
         dataTask.remove(codeOfTask);
         return dataTask;
     }
 
     @Override
     public HashMap<Integer, EpicTask> deleteEpicTask(int codeOfTask) {
+        if(!dataEpicTask.containsKey(codeOfTask)) return null;
         for (Map.Entry<Integer, SubTask> pair : dataSubTask.entrySet()) {
             if (pair.getValue().getCodeOfEpicTask() == codeOfTask) {
                 dataSubTask.remove(pair.getKey());
                 return deleteEpicTask(codeOfTask);
             }
         }
-        historyManager.remove(codeOfTask);   //
+        historyManager.remove(codeOfTask);
         dataEpicTask.remove(codeOfTask);
         return dataEpicTask;
     }
 
     @Override
     public HashMap<Integer, SubTask> deleteSubTask(int codeOfTask) {
+        if(!dataSubTask.containsKey(codeOfTask)) return null;
         for (Map.Entry<Integer, EpicTask> pair : dataEpicTask.entrySet()) {
-            for (SubTask subTask : pair.getValue().listOfSubTasks) {
-                if (subTask.taskCode == codeOfTask) {
-                    pair.getValue().listOfSubTasks.remove(subTask);
+            for (SubTask subTask : pair.getValue().getListOfSubTasks()) {
+                if (subTask.getTaskCode() == codeOfTask) {
+                    pair.getValue().deleteSubTask(subTask);;
                     return deleteSubTask(codeOfTask);
                 }
             }
         }
-        historyManager.remove(codeOfTask);  //
+        historyManager.remove(codeOfTask);
         dataSubTask.remove(codeOfTask);
         return dataSubTask;
     }
 
     @Override
     public Task updateTask(String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus) {
+        if(!dataTask.containsKey(taskCode)) return null;
         try {
-            dataTask.get(taskCode).nameOfTask = newNameOfTask;
-            dataTask.get(taskCode).taskDescription = newTaskDescription;
-            dataTask.get(taskCode).status = newStatus;
+            dataTask.get(taskCode).renameTask(newNameOfTask);
+            dataTask.get(taskCode).renameTaskDescription(newTaskDescription);
+            dataTask.get(taskCode).changeStatus(newStatus);
         } catch (NullPointerException e) {
         }
         return dataTask.get(taskCode);
@@ -148,9 +164,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode) {
+        if(!dataEpicTask.containsKey(taskCode)) return null;
         try {
-            dataEpicTask.get(taskCode).nameOfTask = newNameOfTask;
-            dataEpicTask.get(taskCode).taskDescription = newTaskDescription;
+            dataEpicTask.get(taskCode).renameTask(newNameOfTask);
+            dataEpicTask.get(taskCode).renameTask(newTaskDescription);
         } catch (NullPointerException e) {
         }
         return dataEpicTask.get(taskCode);
@@ -159,14 +176,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
                                  Status newStatus) {
+        if(!dataSubTask.containsKey(taskCode)) return null;
         try {
-            dataSubTask.get(taskCode).nameOfTask = newNameOfSubTask;
-            dataSubTask.get(taskCode).taskDescription = newTaskDescription;
-            dataSubTask.get(taskCode).status = newStatus;
-            if (dataEpicTask.containsKey(codeOfEpicTask)) {
-                dataEpicTask.get(codeOfEpicTask).deleteSubTask(dataSubTask.get(taskCode));
-                dataEpicTask.get(codeOfEpicTask).listOfSubTasks.add(dataSubTask.get(taskCode));
-            }
+            dataSubTask.get(taskCode).renameTask(newNameOfSubTask);
+            dataSubTask.get(taskCode).renameTaskDescription(newTaskDescription);
+            dataSubTask.get(taskCode).changeStatus(newStatus);
         } catch (NullPointerException e) {
         }
         return dataSubTask.get(taskCode);
@@ -174,10 +188,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<SubTask> showSubTaskToEpic(int codeOfTask) {
+        if(!dataEpicTask.containsKey(codeOfTask)) return null;
         List<SubTask> subTuskList = new ArrayList<>();
         for (Map.Entry<Integer, EpicTask> pair : dataEpicTask.entrySet()) {
             if (pair.getKey() == codeOfTask) {
-                subTuskList = pair.getValue().listOfSubTasks;
+                subTuskList = pair.getValue().getListOfSubTasks();
             }
         }
         return subTuskList;
@@ -185,8 +200,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task taskChangeStatus(int codeOfTask, Status status) {
+        if(!dataTask.containsKey(codeOfTask)) return null;
         try {
-            dataTask.get(codeOfTask).status = status;
+            dataTask.get(codeOfTask).changeStatus(status);
         } catch (NullPointerException e) {
         }
         return dataTask.get(codeOfTask);
@@ -194,16 +210,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask subChangeStatus(int codeOfTask, Status newStatus) {
+        if(!dataSubTask.containsKey(codeOfTask)) return null;
         try {
-            dataSubTask.get(codeOfTask).status = newStatus;
+            dataSubTask.get(codeOfTask).changeStatus(newStatus);
             Set<Status> statusList = new HashSet<>();
-            for (SubTask subTask : dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).listOfSubTasks) {
-                statusList.add(subTask.status);
+            for (SubTask subTask : dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).getListOfSubTasks()) {
+                statusList.add(subTask.getStatus());
             }
             if (statusList.size() > 1) {
-                dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).status = Status.IN_PROGRESS;
+                dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).changeStatus(Status.IN_PROGRESS);
             } else {
-                dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).status = dataSubTask.get(codeOfTask).status;
+                dataEpicTask.get(dataSubTask.get(codeOfTask).getCodeOfEpicTask()).
+                        changeStatus(dataSubTask.get(codeOfTask).getStatus());
             }
             statusList.clear();
         } catch (NullPointerException e) {
@@ -213,6 +231,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public EpicTask checkEpicStatus(int codeOfTask) {
+        if(!dataEpicTask.containsKey(codeOfTask)) return null;
         return dataEpicTask.get(codeOfTask);
     }
 

@@ -1,6 +1,6 @@
-import taskTracker.Managers;
+import manegers.Managers;
 import taskTracker.Status;
-import taskTracker.TaskManager;
+import interfaces.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -64,8 +64,10 @@ public class Main {
                 3));
         System.out.println(manager.updateSubTask("новое имя", "новое описание",
                 122, 122, Status.DONE));
+        System.out.println(manager.showSubTaskToEpic(3));
         System.out.println(manager.updateSubTask("новое имя", "новое описание",
-                6, 3, Status.DONE));*/
+                6, 3, Status.DONE));
+        System.out.println(manager.showSubTaskToEpic(3));*/
 
 
 //        проверка на изменение статуса задач
@@ -99,6 +101,8 @@ public class Main {
         manager.showSubTask(6);
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());*/
+
+//        System.out.println(manager.showTask(111));
 
 
 //        проверка метода getHistory() и удаление задач delete

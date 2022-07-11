@@ -1,4 +1,7 @@
-package taskTracker;
+package manegers;
+
+import interfaces.HistoryManager;
+import taskTracker.Task;
 
 import java.util.*;
 
@@ -7,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void addHistory(Task task) {
-        dataRequest.addLast(task, task.taskCode);
+        dataRequest.addLast(task, task.getTaskCode());
     }
 
     @Override
@@ -21,7 +24,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     public List<Task> getHistory() {
         if (!dataRequest.isEmpty()) {
             return dataRequest.getTasks();
-        } return null;
+        }
+        List<Task> nullList = new ArrayList<Task>();
+        return nullList;
     }
 
     public static class CustomLinkedList<T> {
@@ -40,7 +45,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         private Node<T> head;
         private Node<T> tail;
-        private int size = 0;
         public void add (Integer taskCode, Node<T> task) {
             nodeMap.put(taskCode, task);
         }
@@ -59,7 +63,6 @@ public class InMemoryHistoryManager implements HistoryManager {
                 head = newNode;
             else
                 oldTail.next = newNode;
-            size++;
             add(taskCode, newNode);
         }
         public List<T> getTasks() {
@@ -93,7 +96,6 @@ public class InMemoryHistoryManager implements HistoryManager {
                 tail = null;
             else
                 next.prev = null;
-            size--;
             return element;
         }
 
@@ -107,7 +109,6 @@ public class InMemoryHistoryManager implements HistoryManager {
                 head = null;
             else
                 prev.next = null;
-            size--;
             return element;
         }
 
@@ -131,7 +132,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
 
             node.task = null;
-            size--;
             return element;
         }
     }

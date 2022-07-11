@@ -14,8 +14,8 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        return "taskTracker.SubTask {" +
-                "Имя подзадачи - '" + nameOfTask + '\'' +
+        return "SubTask {" +
+                "Имя подзадачи - '" + nameOfTask + '\'' +     // тут "ПОДЗАДАЧИ" а в Task "ЗАДАЧИ"
                 ", Описание подзадачи - '" + taskDescription + '\'' +
                 ", Статус подзадачи - " + status +
                 '}';

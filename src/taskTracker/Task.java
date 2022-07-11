@@ -15,7 +15,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "taskTracker.Task {" +
+        return "Task {" +
                 "Имя задачи'" + nameOfTask + '\'' +
                 ", Описание задачи - '" + taskDescription + '\'' +
                 ", Статус задачи - " + status +
@@ -24,6 +24,21 @@ public class Task {
 
     public int getTaskCode() {
         return taskCode;
+    }
+    public Status getStatus() {
+        return status;
+    }
+    public String getName() {
+        return nameOfTask;
+    }
+    public String renameTask(String newNameOfTask) {
+        return nameOfTask = newNameOfTask;
+    }
+    public String renameTaskDescription(String newTaskDescription) {
+        return taskDescription = newTaskDescription;
+    }
+    public Status changeStatus(Status newStatus) {
+        return status = newStatus;
     }
 }
 
