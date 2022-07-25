@@ -5,6 +5,7 @@ public class Task {
     protected String taskDescription;
     protected int taskCode;
     protected Status status;
+    protected TypeOfTask type = TypeOfTask.TASK;
 
     public Task(String nameOfTask, String taskDescription, int taskCode, Status status) {
         this.nameOfTask = nameOfTask;
@@ -40,5 +41,7 @@ public class Task {
     public Status changeStatus(Status newStatus) {
         return status = newStatus;
     }
+    public String getTaskDescription() { return taskDescription; }
+    public TypeOfTask getType() { return type; }
 }
 

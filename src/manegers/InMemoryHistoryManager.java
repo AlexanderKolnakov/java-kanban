@@ -2,7 +2,6 @@ package manegers;
 
 import interfaces.HistoryManager;
 import taskTracker.Task;
-
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -42,7 +41,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
         }
         private final Map<Integer, Node<T>> nodeMap = new HashMap<>();
-
         private Node<T> head;
         private Node<T> tail;
         public void add (Integer taskCode, Node<T> task) {
@@ -112,7 +110,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             return element;
         }
 
-        T removeNode (Node<T> node) {
+        private T removeNode (Node<T> node) {
             final T element = node.task;
             final Node<T> next = node.next;
             final Node<T> prev = node.prev;

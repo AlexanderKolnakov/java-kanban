@@ -1,6 +1,5 @@
 package interfaces;
 import taskTracker.Task;
-
 import java.util.List;
 
 public interface HistoryManager {

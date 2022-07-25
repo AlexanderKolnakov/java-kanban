@@ -2,6 +2,7 @@ package taskTracker;
 
 public class SubTask extends Task {
     private final int CODE_OF_EPIC_TASK;
+    protected TypeOfTask type = TypeOfTask.SUBTASK;
 
     public int getCodeOfEpicTask() {
         return CODE_OF_EPIC_TASK;
@@ -20,4 +21,5 @@ public class SubTask extends Task {
                 ", Статус подзадачи - " + status +
                 '}';
     }
+    public TypeOfTask getType() { return type; }
 }

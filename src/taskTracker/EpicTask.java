@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class EpicTask extends Task {
 
      ArrayList<SubTask> listOfSubTasks = new ArrayList<>();
+    protected TypeOfTask type = TypeOfTask.EPIC;
 
 
     public EpicTask(String nameOfTask, String taskDescription, int taskCode) {
@@ -35,4 +36,5 @@ public class EpicTask extends Task {
     public void addSubTaskInListOfSubTasks(SubTask subTask) {
         listOfSubTasks.add(subTask);
     }
+    public TypeOfTask getType() { return type; }
 }
