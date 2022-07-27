@@ -1,4 +1,3 @@
-import manegers.FileBackedTasksManager;
 import manegers.Managers;
 import taskTracker.Status;
 import interfaces.TaskManager;
@@ -8,53 +7,37 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) {
 
-        TaskManager manager = new Managers().getDefault();
-
-//        manager.addTask("Задача 1", "описание Задачи 1", Status.DONE);  // taskCode = 1
-//        manager.addTask("Задача 2", "описание Задачи 2", Status.DONE);  // taskCode = 2
-//
-//        manager.addEpicTask("Эпик_Задача 1", "описание Эпик_Задачи 3");  // taskCode = 3
-//        manager.addEpicTask("Эпик_Задача 2", "описание Эпик_Задачи 4");  // taskCode = 4
-//
-//        manager.addSubTask("Подзадача 5 Эпик_Задачи 3", "описание Подзадачи 5",
-//                3, Status.NEW);  // taskCode = 5
-//        manager.addSubTask("Подзадача 6 Эпик_Задачи 3", "описание Подзадачи 6",
-//                3, Status.NEW);  // taskCode = 6
-//        manager.addSubTask("Подзадача 7 Эпик_Задачи 3", "описание Подзадачи 7",
-//                3, Status.NEW);  // taskCode = 7
-//        manager.addSubTask("Подзадача 8 Эпик_Задачи 4", "описание Подзадачи 8",
-//                4, Status.NEW);  // taskCode = 8
-//        manager.addSubTask("Подзадача 9 Эпик_Задачи 4", "описание Подзадачи 9",
-//                4, Status.NEW);  // taskCode = 9
-
-
-
         File file = new File("memoryTask.csv");
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+        TaskManager manager = new Managers().getDefault(file);
 
 
-//         создание задач (Task, Epic, Sub) и просмотр их
+//        автоматическое восстановление созданных задачи и истроии просмотра из файла
 
-        /*createFileBackedTasksManager(fileBackedTasksManager);*/
-
-
+        manager.load();
 
 
+//        вывод в концоль всех задачи и истории просмотров
 
-//        Восстановление задачи и истории просмотров из файла.
-//        Сначала нужно запустить createFileBackedTasksManager(fileBackedTasksManager) - имитация создания задачи и просмотров,
-//        чтоб заполнить файл memoryTask.csv.
-//        Потом закоммитить createFileBackedTasksManager(fileBackedTasksManager) и снова запустить - имитация того что
-//        проложение было закрыто и восстановление произойдет из записанного файла
+        /*System.out.println(manager.showAllTusk());
+        System.out.println(manager.getHistory());*/
 
 
+//      создание задач
 
-        /*fileBackedTasksManager.loadFromFile(file);
-
-        System.out.println(fileBackedTasksManager.showAllTusk());
-        System.out.println(fileBackedTasksManager.getHistory());*/
-
-
+        /*manager.addTask("Задача 1", "описание Задачи 1", Status.DONE);  // taskCode = 1
+        manager.addTask("Задача 2", "описание Задачи 2", Status.DONE);  // taskCode = 2
+                manager.addEpicTask("Эпик_Задача 1", "описание Эпик_Задачи 3");  // taskCode = 3
+        manager.addEpicTask("Эпик_Задача 2", "описание Эпик_Задачи 4");  // taskCode = 4
+        manager.addSubTask("Подзадача 5 Эпик_Задачи 3", "описание Подзадачи 5",
+                3, Status.NEW);  // taskCode = 5
+        manager.addSubTask("Подзадача 6 Эпик_Задачи 3", "описание Подзадачи 6",
+                3, Status.NEW);  // taskCode = 6
+        manager.addSubTask("Подзадача 7 Эпик_Задачи 3", "описание Подзадачи 7",
+                3, Status.NEW);  // taskCode = 7
+        manager.addSubTask("Подзадача 8 Эпик_Задачи 4", "описание Подзадачи 8",
+                4, Status.NEW);  // taskCode = 8
+        manager.addSubTask("Подзадача 9 Эпик_Задачи 4", "описание Подзадачи 9",
+                4, Status.NEW);  // taskCode = 9*/
 
 
 
@@ -144,42 +127,5 @@ public class Main {
         manager.deleteSubTask(6);
         System.out.println(manager.getHistory());
         System.out.println(manager.getHistory().size());*/
-    }
-    public static void createFileBackedTasksManager(FileBackedTasksManager fileBackedTasksManager) {
-
-        fileBackedTasksManager.addTask("Задача 1", "описание Задачи 1", Status.DONE);  // taskCode = 1
-        fileBackedTasksManager.addTask("Задача 2", "описание Задачи 2", Status.DONE);  // taskCode = 2
-
-        fileBackedTasksManager.addEpicTask("Эпик_Задача 1", "описание Эпик_Задачи 3");  // taskCode = 3
-        fileBackedTasksManager.addEpicTask("Эпик_Задача 2", "описание Эпик_Задачи 4");  // taskCode = 4
-
-        fileBackedTasksManager.addSubTask("Подзадача 5 Эпик_Задачи 3", "описание Подзадачи 5",
-                3, Status.NEW);  // taskCode = 5
-        fileBackedTasksManager.addSubTask("Подзадача 6 Эпик_Задачи 3", "описание Подзадачи 6",
-                3, Status.NEW);  // taskCode = 6
-        fileBackedTasksManager.addSubTask("Подзадача 7 Эпик_Задачи 3", "описание Подзадачи 7",
-                3, Status.NEW);  // taskCode = 7
-        fileBackedTasksManager.addSubTask("Подзадача 8 Эпик_Задачи 4", "описание Подзадачи 8",
-                4, Status.NEW);  // taskCode = 8
-        fileBackedTasksManager.addSubTask("Подзадача 9 Эпик_Задачи 4", "описание Подзадачи 9",
-                4, Status.NEW);  // taskCode = 9
-
-
-        fileBackedTasksManager.showTask(1);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showSubTask(6);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showSubTask(6);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showSubTask(6);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showEpicTask(3);
-        fileBackedTasksManager.showSubTask(6);
     }
 }

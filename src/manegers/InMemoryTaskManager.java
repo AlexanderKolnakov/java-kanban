@@ -7,6 +7,7 @@ import taskTracker.Status;
 import taskTracker.SubTask;
 import taskTracker.Task;
 
+import java.io.File;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -237,5 +238,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    @Override
+    public void load() {
+
     }
 }

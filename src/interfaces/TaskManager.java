@@ -1,9 +1,12 @@
 package interfaces;
 
+import manegers.FileBackedTasksManager;
 import taskTracker.EpicTask;
 import taskTracker.Status;
 import taskTracker.SubTask;
 import taskTracker.Task;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,4 +53,5 @@ public interface TaskManager {
     EpicTask checkEpicStatus(int codeOfTask);
 
     List<Task> getHistory();
+    void load();
 }

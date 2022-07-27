@@ -57,7 +57,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return null;
     }   // создание задачи из строки
 
-    private Status checkStatus(String statusString) {
+    private static Status checkStatus(String statusString) {
         Status status = Status.NEW;
         switch (statusString) {
             case "IN_PROGRESS":
@@ -89,7 +89,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return fileBackedTasksManager;
     }
 
-    static String historyToString(HistoryManager manager) {
+    private static String historyToString(HistoryManager manager) {
         List<Task> history = manager.getHistory();
         int count = 0;
         StringBuilder numberHistory = new StringBuilder();
@@ -104,18 +104,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }  // сохранение истории в строку
 
     void historyFromString(String value) {
-        List<Integer> integerList = new ArrayList<>();
-        String[] historyString = value.split(",");
-        for (String s : historyString) {
-            integerList.add(Integer.valueOf(s));
-            if (dataTask.containsKey(Integer.valueOf(s))) {
-                showTask(Integer.parseInt(s));
-            }
-            if (dataEpicTask.containsKey(Integer.valueOf(s))) {
-                showEpicTask(Integer.parseInt(s));
-            }
-            if (dataSubTask.containsKey(Integer.valueOf(s))) {
-                showSubTask(Integer.parseInt(s));
+        if (!(value == null)) {
+            List<Integer> integerList = new ArrayList<>();
+            String[] historyString = value.split(",");
+            for (String s : historyString) {
+                integerList.add(Integer.valueOf(s));
+                if (dataTask.containsKey(Integer.valueOf(s))) {
+                    showTask(Integer.parseInt(s));
+                }
+                if (dataEpicTask.containsKey(Integer.valueOf(s))) {
+                    showEpicTask(Integer.parseInt(s));
+                }
+                if (dataSubTask.containsKey(Integer.valueOf(s))) {
+                    showSubTask(Integer.parseInt(s));
+                }
             }
         }
     }  // восстановление истории из строки
@@ -217,6 +219,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         SubTask subTask = super.subChangeStatus(codeOfTask, newStatus);
         save();
         return subTask;
+    }
+
+    @Override
+    public void load() {
+        loadFromFile(file);
     }
 
     @Override
