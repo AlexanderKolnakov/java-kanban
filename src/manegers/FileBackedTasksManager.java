@@ -100,6 +100,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 numberHistory.append(",");
             }
         }
+        numberHistory.append("\n");
         return numberHistory.toString();
     }  // сохранение истории в строку
 

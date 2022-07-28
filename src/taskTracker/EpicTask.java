@@ -17,11 +17,11 @@ public class EpicTask extends Task {
 
     @Override
     public String toString() {
-        return "EpicTask {" +
-                "Список задач :" + listOfSubTasks +
-                "Имя задачи -'" + nameOfTask + '\'' +
-                ", Описание задачи -'" + taskDescription + '\'' +
-                ", Статус задачи -" + status +
+        return "EpicTask { id Epic задачи - " + taskCode +
+                ", Имя Epic задачи -'" + nameOfTask + '\'' +
+                ", Описание Epic задачи -'" + taskDescription + '\'' +
+                ", Статус Epic задачи -" + status +
+                ", Список подзадач :" + listOfSubTasks +
                 '}';
     }
     public void deleteSubTask(SubTask subTask) {

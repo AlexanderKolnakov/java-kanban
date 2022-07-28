@@ -75,12 +75,14 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         public void removeT (Integer taskCode) {
             Node<T> removeElement = nodeMap.get(taskCode);
-            if (removeElement == head) {
-                removeFirstNode(removeElement);
-            } else if (removeElement == tail) {
-                removeLastNode(removeElement);
-            } else {
-                removeNode(removeElement);
+            if (nodeMap.containsKey(taskCode)) {
+                if (removeElement == head) {
+                    removeFirstNode(removeElement);
+                } else if (removeElement == tail) {
+                    removeLastNode(removeElement);
+                } else {
+                    removeNode(removeElement);
+                }
             }
         }
 
