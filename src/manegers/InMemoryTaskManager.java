@@ -12,7 +12,7 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     HashMap<Integer, Task> dataTask = new HashMap<>();
-    private int taskScore = 0;
+    int taskScore = 0;
     HashMap<Integer, EpicTask> dataEpicTask = new HashMap<>();
     HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
     HistoryManager historyManager = Managers.getDefaultHistory();
@@ -36,13 +36,13 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
                               Status status) {
-        if(!dataEpicTask.containsKey(codeOfEpicTask)) return null;
         taskScore++;
         SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskScore, status, codeOfEpicTask);
         if (dataEpicTask.containsKey(codeOfEpicTask)) {
             dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
         }
         dataSubTask.put(taskScore, subTask);
+        if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
         return subTask;
     }
 
@@ -81,6 +81,8 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager.addHistory(dataSubTask.get(codeOfTask));
         return dataSubTask.get(codeOfTask);
     }
+
+
 
     @Override
     public HashMap<Integer, Task> deleteAllTask() {
@@ -242,5 +244,30 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void load() {
+    }
+    @Override
+    public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode) {
+        Task task = new Task(nameOfTask, taskDescription, taskCode, status);
+        dataTask.put(taskCode, task);
+        return task;
+    }
+
+    @Override
+    public EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode) {
+        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskCode);
+        dataEpicTask.put(taskCode, epicTask);
+        return epicTask;
+    }
+
+    @Override
+    public SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
+                                Status status, int taskCode) {
+        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskCode, status, codeOfEpicTask);
+        if (dataEpicTask.containsKey(codeOfEpicTask)) {
+            dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
+        }
+        dataSubTask.put(taskCode, subTask);
+        if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
+        return subTask;
     }
 }

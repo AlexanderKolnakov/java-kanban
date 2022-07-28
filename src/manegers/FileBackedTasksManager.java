@@ -48,11 +48,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         String[] taskString = value.split(",");
         switch (taskString[1]) {
             case "TASK":
-                return addTask(taskString[2], taskString[4], checkStatus(taskString[3]));
+                return addTaskID(taskString[2], taskString[4], checkStatus(taskString[3]),
+                        Integer.parseInt(taskString[0]));
             case "EPIC":
-                return addEpicTask(taskString[2], taskString[4]);
+                return addEpicTaskID(taskString[2], taskString[4], Integer.parseInt(taskString[0]));
             case "SUBTASK":
-                return addSubTask(taskString[2], taskString[4], Integer.parseInt(taskString[5]), checkStatus(taskString[3]));
+                return addSubTaskID(taskString[2], taskString[4], Integer.parseInt(taskString[5]),
+                        checkStatus(taskString[3]), Integer.parseInt(taskString[0]));
         }
         return null;
     }   // создание задачи из строки
@@ -124,22 +126,33 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }  // восстановление истории из строки
 
     @Override
-    public Task addTask(String nameOfTask, String taskDescription, Status status) {
-        Task task = super.addTask(nameOfTask, taskDescription, status);
+    public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode) {
+        Task task = new Task(nameOfTask, taskDescription, taskCode, status);
+        dataTask.put(taskCode, task);
+        taskScore ++;
         save();
         return task;
     }
 
     @Override
-    public EpicTask addEpicTask(String nameOfTask, String taskDescription) {
-        EpicTask epicTask = super.addEpicTask(nameOfTask, taskDescription);
+    public EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode) {
+        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskCode);
+        dataEpicTask.put(taskCode, epicTask);
+        taskScore ++;
         save();
         return epicTask;
     }
 
     @Override
-    public SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask, Status status) {
-        SubTask subTask = super.addSubTask(nameOfSubTask, taskDescription, codeOfEpicTask, status);
+    public SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
+                                Status status, int taskCode) {
+        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskCode, status, codeOfEpicTask);
+        if (dataEpicTask.containsKey(codeOfEpicTask)) {
+            dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
+        }
+        dataSubTask.put(taskCode, subTask);
+        if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
+        taskScore ++;
         save();
         return subTask;
     }

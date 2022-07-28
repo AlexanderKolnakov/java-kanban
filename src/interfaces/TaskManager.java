@@ -25,6 +25,13 @@ public interface TaskManager {
 
     SubTask showSubTask(int codeOfTask);
 
+    Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode);
+
+    EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode);
+
+    SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
+                         Status status, int taskCode);
+
     HashMap<Integer, Task> deleteAllTask();
 
     HashMap<Integer, EpicTask> deleteAllEpicTask();
