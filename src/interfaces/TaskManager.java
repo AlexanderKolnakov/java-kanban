@@ -59,6 +59,6 @@ public interface TaskManager {
 
     EpicTask checkEpicStatus(int codeOfTask);
 
-    List<Task> getHistory();
+    List<Integer> getHistory();
     void load();
 }

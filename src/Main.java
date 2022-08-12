@@ -11,9 +11,18 @@ public class Main {
         TaskManager manager = new Managers().getDefault(file);
 
 
+        manager.addEpicTask("Эпик_Задача 3", "описание Эпик_Задачи 3");
+
+        manager.addSubTask("Подзадача 3 Эпик_Задачи 3", "описание Подзадачи 3",
+                1, Status.DONE);
+        manager.addSubTask("Подзадача 4 Эпик_Задачи 3", "описание Подзадачи 4",
+                1, Status.DONE);
+
+
+        System.out.println(manager.checkEpicStatus(1));
 //        автоматическое восстановление созданных задачи и истроии просмотра из файла
 
-        manager.load();
+//        manager.load();
 
 
 
@@ -25,44 +34,44 @@ public class Main {
 
 //      создание задач
 
-        manager.addTask("Задача 1", "описание Задачи 1", Status.DONE);  // taskCode = 1
-        manager.addTask("Задача 2", "описание Задачи 2", Status.DONE);  // taskCode = 2
-                manager.addEpicTask("Эпик_Задача 1", "описание Эпик_Задачи 3");  // taskCode = 3
-        manager.addEpicTask("Эпик_Задача 2", "описание Эпик_Задачи 4");  // taskCode = 4
-        manager.addSubTask("Подзадача 5 Эпик_Задачи 3", "описание Подзадачи 5",
-                3, Status.NEW);  // taskCode = 5
-        manager.addSubTask("Подзадача 6 Эпик_Задачи 3", "описание Подзадачи 6",
-                3, Status.NEW);  // taskCode = 6
-        manager.addSubTask("Подзадача 7 Эпик_Задачи 3", "описание Подзадачи 7",
-                3, Status.NEW);  // taskCode = 7
-        manager.addSubTask("Подзадача 8 Эпик_Задачи 4", "описание Подзадачи 8",
-                4, Status.NEW);  // taskCode = 8
-        manager.addSubTask("Подзадача 9 Эпик_Задачи 4", "описание Подзадачи 9",
-                4, Status.NEW);  // taskCode = 9
+//        manager.addTask("Задача 1", "описание Задачи 1", Status.DONE);  // taskCode = 1
+//        manager.addTask("Задача 2", "описание Задачи 2", Status.DONE);  // taskCode = 2
+//                manager.addEpicTask("Эпик_Задача 1", "описание Эпик_Задачи 3");  // taskCode = 3
+//        manager.addEpicTask("Эпик_Задача 2", "описание Эпик_Задачи 4");  // taskCode = 4
+//        manager.addSubTask("Подзадача 5 Эпик_Задачи 3", "описание Подзадачи 5",
+//                3, Status.NEW);  // taskCode = 5
+//        manager.addSubTask("Подзадача 6 Эпик_Задачи 3", "описание Подзадачи 6",
+//                3, Status.NEW);  // taskCode = 6
+//        manager.addSubTask("Подзадача 7 Эпик_Задачи 3", "описание Подзадачи 7",
+//                3, Status.NEW);  // taskCode = 7
+//        manager.addSubTask("Подзадача 8 Эпик_Задачи 4", "описание Подзадачи 8",
+//                4, Status.NEW);  // taskCode = 8
+//        manager.addSubTask("Подзадача 9 Эпик_Задачи 4", "описание Подзадачи 9",
+//                4, Status.NEW);  // taskCode = 9
 
         //        проверка метода getHistory()
 
-        manager.showTask(1);
-        System.out.println(manager.getHistory());
-        System.out.println(manager.getHistory().size());
-        System.out.println("\n");
-        manager.showEpicTask(3);
-        manager.showEpicTask(3);
-        manager.showSubTask(6);
-        manager.showEpicTask(3);
-        manager.showEpicTask(3);
-        manager.showEpicTask(3);
-        manager.showSubTask(6);
-        manager.showEpicTask(3);
-        manager.showEpicTask(3);
-        manager.showEpicTask(3);
-        manager.showSubTask(6);
-        manager.showEpicTask(3);
-        manager.showEpicTask(3);
-        manager.showEpicTask(3);
-        manager.showSubTask(6);
-        System.out.println(manager.getHistory());
-        System.out.println(manager.getHistory().size());
+//        manager.showTask(1);
+//        System.out.println(manager.getHistory());
+//        System.out.println(manager.getHistory().size());
+//        System.out.println("\n");
+//        manager.showEpicTask(3);
+//        manager.showEpicTask(3);
+//        manager.showSubTask(6);
+//        manager.showEpicTask(3);
+//        manager.showEpicTask(3);
+//        manager.showEpicTask(3);
+//        manager.showSubTask(6);
+//        manager.showEpicTask(3);
+//        manager.showEpicTask(3);
+//        manager.showEpicTask(3);
+//        manager.showSubTask(6);
+//        manager.showEpicTask(3);
+//        manager.showEpicTask(3);
+//        manager.showEpicTask(3);
+//        manager.showSubTask(6);
+//        System.out.println(manager.getHistory());
+//        System.out.println(manager.getHistory().size());
 
 
 

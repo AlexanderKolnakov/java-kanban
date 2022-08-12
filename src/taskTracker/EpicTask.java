@@ -1,5 +1,7 @@
 package taskTracker;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EpicTask extends Task {
 
@@ -13,6 +15,24 @@ public class EpicTask extends Task {
 
     public void addSubTask(SubTask subTask) {
         listOfSubTasks.add(subTask);
+        Set<Status> statusList = new HashSet<>();
+        for (SubTask sub : listOfSubTasks) {
+            statusList.add(sub.getStatus());
+        }
+        checkStatus();
+    }
+    public void checkStatus () {
+        Set<Status> statusList = new HashSet<>();
+        for (SubTask sub : listOfSubTasks) {
+            statusList.add(sub.getStatus());
+        }
+        if (statusList.size() > 1) {
+            status = Status.IN_PROGRESS;
+        } else {
+            for (Status s : statusList) {
+                status = s;
+            }
+        }
     }
 
     @Override

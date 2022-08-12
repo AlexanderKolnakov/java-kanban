@@ -99,6 +99,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(task.getValue().getTaskCode());
         }
         dataEpicTask.clear();
+        deleteAllSubTask();
         return dataEpicTask;
     }
 
@@ -238,10 +239,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getHistory() {
-        return historyManager.getHistory();
+    public List<Integer> getHistory() {
+        List<Integer> historyList = new ArrayList<>();
+        for (Task task : historyManager.getHistory()) {
+            historyList.add(task.getTaskCode());
+        }
+        return historyList;
     }
-
     @Override
     public void load() {
     }
