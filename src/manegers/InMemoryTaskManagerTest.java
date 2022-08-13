@@ -231,6 +231,7 @@ class InMemoryTaskManagerTest {
         List<Integer> history = List.of(1, 2, 3);
 
         Assertions.assertEquals(history, manager.getHistory());
+        System.out.println();
     }
 
     @Test

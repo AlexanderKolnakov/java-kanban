@@ -19,6 +19,9 @@ public class EpicTask extends Task {
         for (SubTask sub : listOfSubTasks) {
             statusList.add(sub.getStatus());
         }
+
+
+
         checkStatus();
     }
     public void checkStatus () {
