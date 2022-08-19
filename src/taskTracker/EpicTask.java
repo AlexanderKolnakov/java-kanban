@@ -1,16 +1,22 @@
 package taskTracker;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class EpicTask extends Task {
 
-     ArrayList<SubTask> listOfSubTasks = new ArrayList<>();
+    ArrayList<SubTask> listOfSubTasks = new ArrayList<>();
     protected TypeOfTask type = TypeOfTask.EPIC;
+    protected LocalDateTime endTime;
 
 
     public EpicTask(String nameOfTask, String taskDescription, int taskCode) {
         super(nameOfTask, taskDescription, taskCode, Status.NEW);
+    }
+
+    public EpicTask(String nameOfTask, String taskDescription, int taskCode, long duration, LocalDateTime startTime) {
+        super(nameOfTask, taskDescription, taskCode, Status.NEW, duration, startTime);
     }
 
     public void addSubTask(SubTask subTask) {
@@ -19,9 +25,6 @@ public class EpicTask extends Task {
         for (SubTask sub : listOfSubTasks) {
             statusList.add(sub.getStatus());
         }
-
-
-
         checkStatus();
     }
     public void checkStatus () {
@@ -60,4 +63,7 @@ public class EpicTask extends Task {
         listOfSubTasks.add(subTask);
     }
     public TypeOfTask getType() { return type; }
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
 }

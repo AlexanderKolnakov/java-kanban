@@ -2,47 +2,89 @@ package manegers;
 
 import interfaces.HistoryManager;
 import interfaces.TaskManager;
+import org.junit.jupiter.api.function.Executable;
 import taskTracker.EpicTask;
 import taskTracker.Status;
 import taskTracker.SubTask;
 import taskTracker.Task;
 
-import java.io.File;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
+    public static Executable IntersectionDataException;
     HashMap<Integer, Task> dataTask = new HashMap<>();
     int taskScore = 0;
     HashMap<Integer, EpicTask> dataEpicTask = new HashMap<>();
     HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
     HistoryManager historyManager = Managers.getDefaultHistory();
+    TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     @Override
-    public Task addTask(String nameOfTask, String taskDescription, Status status) {
+    public Task addTask(String nameOfTask, String taskDescription, Status status) throws IntersectionDataException {
         taskScore++;
         Task task = new Task(nameOfTask, taskDescription, taskScore, status);
         dataTask.put(taskScore, task);
+        validate(task);
         return task;
     }
 
     @Override
-    public EpicTask addEpicTask(String nameOfTask, String taskDescription) {
+    public Task addTask (String nameOfTask, String taskDescription, Status status,
+                         long duration, LocalDateTime startTime) throws IntersectionDataException {
+        taskScore++;
+        Task task = new Task(nameOfTask, taskDescription, taskScore, status, duration, startTime);
+        dataTask.put(taskScore, task);
+        validate(task);
+        return task;
+    }
+
+    @Override
+    public EpicTask addEpicTask(String nameOfTask, String taskDescription) throws IntersectionDataException {
         taskScore++;
         EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskScore);
         dataEpicTask.put(taskScore, epicTask);
+        validate(epicTask);
+        return epicTask;
+    }
+
+    @Override
+    public EpicTask addEpicTask (String nameOfTask, String taskDescription, long duration, LocalDateTime startTime) throws IntersectionDataException {
+        taskScore++;
+        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskScore, duration, startTime);
+        dataEpicTask.put(taskScore, epicTask);
+        validate(epicTask);
         return epicTask;
     }
 
     @Override
     public SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
-                              Status status) {
+                              Status status) throws IntersectionDataException {
+        if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
         taskScore++;
         SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskScore, status, codeOfEpicTask);
+        dataSubTask.put(taskScore, subTask);
+        validate(subTask);
         if (dataEpicTask.containsKey(codeOfEpicTask)) {
             dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
+            updateEpicDurationAndStartTime(codeOfEpicTask);
         }
-        dataSubTask.put(taskScore, subTask);
+        return subTask;
+    }
+
+    @Override
+    public SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
+                              Status status, long duration, LocalDateTime startTime) throws IntersectionDataException {
         if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
+        taskScore++;
+        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskScore, status, codeOfEpicTask,
+                duration, startTime);
+        dataSubTask.put(taskScore, subTask);
+        validate(subTask);
+        if (dataEpicTask.containsKey(codeOfEpicTask)) {
+            dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
+            updateEpicDurationAndStartTime(codeOfEpicTask);
+        }
         return subTask;
     }
 
@@ -88,6 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
     public HashMap<Integer, Task> deleteAllTask() {
         for (Map.Entry<Integer, Task> task : dataTask.entrySet()) {
             historyManager.remove(task.getValue().getTaskCode());
+            prioritizedTasks.remove(task.getValue());
         }
         dataTask.clear();
         return dataTask;
@@ -97,6 +140,7 @@ public class InMemoryTaskManager implements TaskManager {
     public HashMap<Integer, EpicTask> deleteAllEpicTask() {
         for (Map.Entry<Integer, EpicTask> task : dataEpicTask.entrySet()) {
             historyManager.remove(task.getValue().getTaskCode());
+            prioritizedTasks.remove(task.getValue());
         }
         dataEpicTask.clear();
         deleteAllSubTask();
@@ -107,10 +151,12 @@ public class InMemoryTaskManager implements TaskManager {
     public HashMap<Integer, SubTask> deleteAllSubTask() {
         for (Map.Entry<Integer, SubTask> task : dataSubTask.entrySet()) {
             historyManager.remove(task.getValue().getTaskCode());
+            prioritizedTasks.remove(task.getValue());
         }
         dataSubTask.clear();
         for (Map.Entry<Integer, EpicTask> pair : dataEpicTask.entrySet()) {
             pair.getValue().removeAllListOfSubTasks();
+            updateEpicDurationAndStartTime(pair.getKey());
         }
         return dataSubTask;
     }
@@ -119,6 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
     public HashMap<Integer, Task> deleteTask(int codeOfTask) {
         if(!dataTask.containsKey(codeOfTask)) return null;
         historyManager.remove(codeOfTask);
+        prioritizedTasks.remove(dataTask.get(codeOfTask));
         dataTask.remove(codeOfTask);
         return dataTask;
     }
@@ -128,11 +175,13 @@ public class InMemoryTaskManager implements TaskManager {
         if(!dataEpicTask.containsKey(codeOfTask)) return null;
         for (Map.Entry<Integer, SubTask> pair : dataSubTask.entrySet()) {
             if (pair.getValue().getCodeOfEpicTask() == codeOfTask) {
+                prioritizedTasks.remove(pair.getValue());
                 dataSubTask.remove(pair.getKey());
                 return deleteEpicTask(codeOfTask);
             }
         }
         historyManager.remove(codeOfTask);
+        prioritizedTasks.remove(dataEpicTask.get(codeOfTask));
         dataEpicTask.remove(codeOfTask);
         return dataEpicTask;
     }
@@ -143,12 +192,14 @@ public class InMemoryTaskManager implements TaskManager {
         for (Map.Entry<Integer, EpicTask> pair : dataEpicTask.entrySet()) {
             for (SubTask subTask : pair.getValue().getListOfSubTasks()) {
                 if (subTask.getTaskCode() == codeOfTask) {
-                    pair.getValue().deleteSubTask(subTask);;
+                    pair.getValue().deleteSubTask(subTask);
+                    updateEpicDurationAndStartTime(pair.getKey());
                     return deleteSubTask(codeOfTask);
                 }
             }
         }
         historyManager.remove(codeOfTask);
+        prioritizedTasks.remove(dataSubTask.get(codeOfTask));
         dataSubTask.remove(codeOfTask);
         return dataSubTask;
     }
@@ -166,11 +217,40 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public Task updateTask (String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus,
+                            long duration, LocalDateTime startTime) {
+        if(!dataTask.containsKey(taskCode)) return null;
+        try {
+            dataTask.get(taskCode).renameTask(newNameOfTask);
+            dataTask.get(taskCode).renameTaskDescription(newTaskDescription);
+            dataTask.get(taskCode).changeStatus(newStatus);
+            dataTask.get(taskCode).setDuration(duration);
+            dataTask.get(taskCode).setStartTime(startTime);
+        } catch (NullPointerException e) {
+        }
+        return dataTask.get(taskCode);
+    }
+
+    @Override
     public EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode) {
         if(!dataEpicTask.containsKey(taskCode)) return null;
         try {
             dataEpicTask.get(taskCode).renameTask(newNameOfTask);
             dataEpicTask.get(taskCode).renameTask(newTaskDescription);
+        } catch (NullPointerException e) {
+        }
+        return dataEpicTask.get(taskCode);
+    }
+
+    @Override
+    public EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode,
+                                   long duration, LocalDateTime startTime) {
+        if(!dataEpicTask.containsKey(taskCode)) return null;
+        try {
+            dataEpicTask.get(taskCode).renameTask(newNameOfTask);
+            dataEpicTask.get(taskCode).renameTask(newTaskDescription);
+            dataEpicTask.get(taskCode).setDuration(duration);
+            dataEpicTask.get(taskCode).setStartTime(startTime);
         } catch (NullPointerException e) {
         }
         return dataEpicTask.get(taskCode);
@@ -184,6 +264,22 @@ public class InMemoryTaskManager implements TaskManager {
             dataSubTask.get(taskCode).renameTask(newNameOfSubTask);
             dataSubTask.get(taskCode).renameTaskDescription(newTaskDescription);
             dataSubTask.get(taskCode).changeStatus(newStatus);
+        } catch (NullPointerException e) {
+        }
+        return dataSubTask.get(taskCode);
+    }
+
+    @Override
+    public SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
+                                 Status newStatus, long duration, LocalDateTime startTime) {
+        if(!dataSubTask.containsKey(taskCode)) return null;
+        try {
+            dataSubTask.get(taskCode).renameTask(newNameOfSubTask);
+            dataSubTask.get(taskCode).renameTaskDescription(newTaskDescription);
+            dataSubTask.get(taskCode).changeStatus(newStatus);
+            dataSubTask.get(taskCode).setDuration(duration);
+            dataSubTask.get(taskCode).setStartTime(startTime);
+            updateEpicDurationAndStartTime(codeOfEpicTask );
         } catch (NullPointerException e) {
         }
         return dataSubTask.get(taskCode);
@@ -246,32 +342,126 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return historyList;
     }
+
     @Override
-    public void load() {
-    }
-    @Override
-    public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode) {
+    public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode) throws IntersectionDataException {
         Task task = new Task(nameOfTask, taskDescription, taskCode, status);
         dataTask.put(taskCode, task);
+        validate(task);
+        taskScore++;
         return task;
     }
 
     @Override
-    public EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode) {
+    public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode,
+                          long duration, LocalDateTime startTime) throws IntersectionDataException {
+        Task task = new Task(nameOfTask, taskDescription, taskCode, status, duration, startTime);
+        dataTask.put(taskCode, task);
+        validate(task);
+        taskScore++;
+        return task;
+    }
+
+    @Override
+    public EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode) throws IntersectionDataException {
         EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskCode);
         dataEpicTask.put(taskCode, epicTask);
+        validate(epicTask);
+        taskScore++;
+        return epicTask;
+    }
+
+    @Override
+    public EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode,
+                                  long duration, LocalDateTime startTime) throws IntersectionDataException {
+        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskCode, duration, startTime);
+        dataEpicTask.put(taskCode, epicTask);
+        validate(epicTask);
+        taskScore++;
         return epicTask;
     }
 
     @Override
     public SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
-                                Status status, int taskCode) {
+                                Status status, int taskCode) throws IntersectionDataException {
+        if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
         SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskCode, status, codeOfEpicTask);
         if (dataEpicTask.containsKey(codeOfEpicTask)) {
             dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
         }
         dataSubTask.put(taskCode, subTask);
-        if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
+        validate(subTask);
+        taskScore++;
         return subTask;
+    }
+
+    @Override
+    public SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
+                                Status status, int taskCode, long duration, LocalDateTime startTime) throws IntersectionDataException {
+        if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
+        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskCode, status, codeOfEpicTask,
+                duration, startTime);
+        if (dataEpicTask.containsKey(codeOfEpicTask)) {
+            dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
+        }
+        dataSubTask.put(taskCode, subTask);
+        validate(subTask);
+        taskScore++;
+        return subTask;
+    }
+
+    private void updateEpicDurationAndStartTime(int epicTaskID) {
+        EpicTask epicTask = dataEpicTask.get(epicTaskID);
+        ArrayList<SubTask> subList = epicTask.getListOfSubTasks();
+        if (subList.isEmpty()) {
+            epicTask.setDuration(0L);
+            return;
+        }
+        LocalDateTime startEpicTask = LocalDateTime.MAX;
+        LocalDateTime endEpicTask = LocalDateTime.MIN;
+        long duration = 0L;
+
+        for (SubTask subTask : subList) {
+            LocalDateTime startTime = subTask.getStartTime();
+            LocalDateTime endTime = subTask.getEndTime();
+            if (startTime.isBefore(startEpicTask)) {
+                startEpicTask = startTime;
+            }
+            if (endTime.isAfter(endEpicTask)) {
+                endEpicTask = endTime;
+            }
+            duration += subTask.getDuration();
+        }
+        epicTask.setDuration(duration);
+        epicTask.setStartTime(startEpicTask);
+        epicTask.setEndTime(endEpicTask);
+    }
+
+
+    @Override
+    public ArrayList<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
+    }
+
+    public void validate(Task addTask) throws IntersectionDataException {
+        if (addTask.getStartTime().isAfter(addTask.getEndTime())) {
+            throw new IntersectionDataException("Начало задачи раньше ее конца");   // исключение что начало раньше конца
+        }
+        for (Task task : prioritizedTasks) {
+            if (addTask.getStartTime().isBefore(task.getStartTime()) && addTask.getEndTime().isAfter(task.getStartTime())) {
+                throw new IntersectionDataException("Обнаружено пересечение с уже существующими задачами : \n " +
+                        "новая задача началась раньше существующей и заканчивается позже начала существующей"); // исключение что новая задача заканчивается позже начала текущей задачи
+            }
+            if (addTask.getStartTime().isAfter(task.getStartTime()) && addTask.getStartTime().isBefore(task.getEndTime())) {
+                throw new IntersectionDataException("Обнаружено пересечение с уже существующими задачами : \n " +
+                        "новая задача началась до завершения уже текущей задачи"); // искл пересечение задач
+            }
+        }
+        prioritizedTasks.add(addTask);
+    }
+    public static class IntersectionDataException extends Exception {
+        public IntersectionDataException(String message) {
+            super(message);
+        }
     }
 }

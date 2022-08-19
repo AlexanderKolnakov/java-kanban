@@ -1,21 +1,22 @@
 package interfaces;
 
-import manegers.FileBackedTasksManager;
+import manegers.InMemoryTaskManager;
 import taskTracker.EpicTask;
 import taskTracker.Status;
 import taskTracker.SubTask;
 import taskTracker.Task;
 
-import java.io.File;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
-    Task addTask(String nameOfTask, String taskDescription, Status status);
+    Task addTask(String nameOfTask, String taskDescription, Status status) throws InMemoryTaskManager.IntersectionDataException;
 
-    EpicTask addEpicTask(String nameOfTask, String taskDescription);
+    EpicTask addEpicTask(String nameOfTask, String taskDescription) throws InMemoryTaskManager.IntersectionDataException;
 
-    SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask, Status status);
+    SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask, Status status) throws InMemoryTaskManager.IntersectionDataException;
 
     List<String> showAllTusk();
 
@@ -25,12 +26,12 @@ public interface TaskManager {
 
     SubTask showSubTask(int codeOfTask);
 
-    Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode);
+    Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode) throws InMemoryTaskManager.IntersectionDataException;
 
-    EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode);
+    EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode) throws InMemoryTaskManager.IntersectionDataException;
 
     SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
-                         Status status, int taskCode);
+                         Status status, int taskCode) throws InMemoryTaskManager.IntersectionDataException;
 
     HashMap<Integer, Task> deleteAllTask();
 
@@ -45,11 +46,15 @@ public interface TaskManager {
     HashMap<Integer, SubTask> deleteSubTask(int codeOfTask);
 
     Task updateTask(String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus);
-
+    Task updateTask (String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus,
+                     long duration, LocalDateTime startTime);
     EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode);
-
+    EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode,
+                            long duration, LocalDateTime startTime);
     SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
                           Status newStatus);
+    SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
+                          Status newStatus, long duration, LocalDateTime startTime);
 
     List<SubTask> showSubTaskToEpic(int codeOfTask);
 
@@ -60,5 +65,16 @@ public interface TaskManager {
     EpicTask checkEpicStatus(int codeOfTask);
 
     List<Integer> getHistory();
-    void load();
+    ArrayList<Task> getPrioritizedTasks();
+    Task addTask (String nameOfTask, String taskDescription, Status status,
+                  long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
+    EpicTask addEpicTask (String nameOfTask, String taskDescription, long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
+    SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
+                       Status status, long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
+    Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode,
+                   long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
+    EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode,
+                           long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
+    SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
+                         Status status, int taskCode, long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
 }

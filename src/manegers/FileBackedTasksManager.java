@@ -4,6 +4,7 @@ import interfaces.TaskManager;
 import taskTracker.*;
 
 import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
     }
 
-    private Task fromString(String value) {
+    private Task fromString(String value) throws IntersectionDataException {
         String[] taskString = value.split(",");
         switch (taskString[1]) {
             case "TASK":
@@ -72,7 +73,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return status;
     }
 
-    public FileBackedTasksManager loadFromFile(File file) {
+    public FileBackedTasksManager loadFromFile(File file) throws IntersectionDataException {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         try (Reader fileReader = new FileReader(file)) {
             BufferedReader br = new BufferedReader(fileReader);
@@ -126,33 +127,48 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }  // восстановление истории из строки
 
     @Override
-    public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode) {
-        Task task = new Task(nameOfTask, taskDescription, taskCode, status);
-        dataTask.put(taskCode, task);
-        taskScore ++;
+    public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode) throws IntersectionDataException {
+        Task task = super.addTaskID(nameOfTask, taskDescription, status, taskCode);
         save();
         return task;
     }
 
     @Override
-    public EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode) {
-        EpicTask epicTask = new EpicTask(nameOfTask, taskDescription, taskCode);
-        dataEpicTask.put(taskCode, epicTask);
-        taskScore ++;
+    public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode, long duration,
+                          LocalDateTime startTime) throws IntersectionDataException {
+        Task task = super.addTaskID(nameOfTask, taskDescription, status, taskCode, duration, startTime);
+        save();
+        return task;
+    }
+
+    @Override
+    public EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode) throws IntersectionDataException {
+        EpicTask epicTask = super.addEpicTaskID(nameOfTask, taskDescription, taskCode);
         save();
         return epicTask;
     }
 
     @Override
+    public EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode, long duration,
+                                  LocalDateTime startTime) throws IntersectionDataException {
+        EpicTask epicTask = super.addEpicTaskID(nameOfTask, taskDescription, taskCode, duration, startTime);
+        save();
+        return epicTask;
+    }
+
+    @Override
+    public SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask, Status status,
+                                int taskCode) throws IntersectionDataException {
+        SubTask subTask = super.addSubTaskID(nameOfSubTask, taskDescription, codeOfEpicTask, status, taskCode);
+        save();
+        return subTask;
+    }
+
+    @Override
     public SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
-                                Status status, int taskCode) {
-        SubTask subTask = new SubTask(nameOfSubTask, taskDescription, taskCode, status, codeOfEpicTask);
-        if (dataEpicTask.containsKey(codeOfEpicTask)) {
-            dataEpicTask.get(codeOfEpicTask).addSubTask(subTask);
-        }
-        dataSubTask.put(taskCode, subTask);
-        if(!dataEpicTask.containsKey(codeOfEpicTask)) {return null;}
-        taskScore ++;
+                                Status status, int taskCode, long duration, LocalDateTime startTime) throws IntersectionDataException {
+        SubTask subTask = super.addSubTaskID(nameOfSubTask, taskDescription, codeOfEpicTask, status,
+                taskCode, duration, startTime);
         save();
         return subTask;
     }
@@ -235,8 +251,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return subTask;
     }
 
-    @Override
-    public void load() {
+
+    public void load() throws IntersectionDataException {
         loadFromFile(file);
     }
 
