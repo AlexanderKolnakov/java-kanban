@@ -12,12 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
-    Task addTask(Task)
-    Task addTask(String nameOfTask, String taskDescription, Status status) throws InMemoryTaskManager.IntersectionDataException;
-
-    EpicTask addEpicTask(String nameOfTask, String taskDescription) throws InMemoryTaskManager.IntersectionDataException;
-
-    SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask, Status status) throws InMemoryTaskManager.IntersectionDataException;
+    Task addTask(Task task) throws InMemoryTaskManager.IntersectionDataException;
+    Task addSubTask(SubTask subTask) throws InMemoryTaskManager.IntersectionDataException;
+    Task addEpicTask(EpicTask epicTask) throws InMemoryTaskManager.IntersectionDataException;
 
     List<String> showAllTusk();
 
@@ -67,15 +64,6 @@ public interface TaskManager {
 
     List<Integer> getHistory();
     ArrayList<Task> getPrioritizedTasks();
-    Task addTask (String nameOfTask, String taskDescription, Status status,
-                  long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
-    EpicTask addEpicTask (String nameOfTask, String taskDescription, long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
-    SubTask addSubTask(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
-                       Status status, long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
-    Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode,
-                   long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
-    EpicTask addEpicTaskID(String nameOfTask, String taskDescription, int taskCode,
-                           long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
-    SubTask addSubTaskID(String nameOfSubTask, String taskDescription, int codeOfEpicTask,
-                         Status status, int taskCode, long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
+
+    void load() throws InMemoryTaskManager.IntersectionDataException;
 }

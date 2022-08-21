@@ -18,6 +18,9 @@ class HistoryManagerTest {
     private Task task;
     private EpicTask epicTask;
     private SubTask subTask;
+    String HISTORY_IS_EMPTY = "Пустая история";
+    String HISTORY_SIZE_NOT_CORRECT = "История не корректного размера.";
+    String HISTORY_ORDER_NOT_CORRECT = "Не корректный порядок истории";
 
     @BeforeEach
     void setUp() {
@@ -34,15 +37,15 @@ class HistoryManagerTest {
         historyManager.addHistory(task);
         final List<Task> history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(1, history.size(), "История не корректного размера.");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(1, history.size(), HISTORY_SIZE_NOT_CORRECT);
     }
 
     @Test
     void getHistory() {
         List<Task> history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
+        assertNotNull(history, HISTORY_IS_EMPTY);
         assertTrue(history.isEmpty(), "Пустая история задач.");
     }
 
@@ -52,78 +55,77 @@ class HistoryManagerTest {
         historyManager.addHistory(task);
         List<Task> history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(1, history.size(), "История не корректного размера.");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(1, history.size(), HISTORY_SIZE_NOT_CORRECT);
     }
 
     @Test
     void removeFirst() {
-        historyManager.addHistory(task);
-        historyManager.addHistory(epicTask);
-        historyManager.addHistory(subTask);
+        addHistoryTaskEpicTaskSubTask();
         List<Task> history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(3, history.size(), "История не корректного размера.");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(3, history.size(), HISTORY_SIZE_NOT_CORRECT);
 
         historyManager.remove(task.getTaskCode());
         history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(2, history.size(), "История не корректного размера.");
-        assertEquals(epicTask, history.get(0), "Не корректынй порядок истории");
-        assertEquals(subTask, history.get(1), "Не корректынй порядок истории");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(2, history.size(), HISTORY_SIZE_NOT_CORRECT);
+        assertEquals(epicTask, history.get(0), HISTORY_ORDER_NOT_CORRECT);
+        assertEquals(subTask, history.get(1), HISTORY_ORDER_NOT_CORRECT);
     }
 
     @Test
     void removeMiddle() {
-        historyManager.addHistory(task);
-        historyManager.addHistory(epicTask);
-        historyManager.addHistory(subTask);
+        addHistoryTaskEpicTaskSubTask();
         List<Task> history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(3, history.size(), "История не корректного размера.");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(3, history.size(), HISTORY_SIZE_NOT_CORRECT);
 
         historyManager.remove(epicTask.getTaskCode());
         history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(2, history.size(), "История не корректного размера.");
-        assertEquals(task, history.get(0), "Не корректынй порядок истории");
-        assertEquals(subTask, history.get(1), "Не корректынй порядок истории");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(2, history.size(), HISTORY_SIZE_NOT_CORRECT);
+        assertEquals(task, history.get(0), HISTORY_ORDER_NOT_CORRECT);
+        assertEquals(subTask, history.get(1), HISTORY_ORDER_NOT_CORRECT);
     }
 
     @Test
     void removeLast() {
-        historyManager.addHistory(task);
-        historyManager.addHistory(epicTask);
-        historyManager.addHistory(subTask);
+        addHistoryTaskEpicTaskSubTask();
         List<Task> history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(3, history.size(), "История не корректного размера.");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(3, history.size(), HISTORY_SIZE_NOT_CORRECT);
 
         historyManager.remove(subTask.getTaskCode());
         history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(2, history.size(), "История не корректного размера.");
-        assertEquals(task, history.get(0), "Не корректынй порядок истории");
-        assertEquals(epicTask, history.get(1), "Не корректынй порядок истории");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(2, history.size(), HISTORY_SIZE_NOT_CORRECT);
+        assertEquals(task, history.get(0), HISTORY_ORDER_NOT_CORRECT);
+        assertEquals(epicTask, history.get(1), HISTORY_ORDER_NOT_CORRECT);
     }
 
     @Test
     void removeEmptyHistory() {
         List<Task> history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(0, history.size(), "История не корректного размера.");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(0, history.size(), HISTORY_SIZE_NOT_CORRECT);
 
         historyManager.remove(epicTask.getTaskCode());
         history = historyManager.getHistory();
 
-        assertNotNull(history, "История не пустая.");
-        assertEquals(0, history.size(), "История не корректного размера.");
+        assertNotNull(history, HISTORY_IS_EMPTY);
+        assertEquals(0, history.size(), HISTORY_SIZE_NOT_CORRECT);
+    }
+    private void addHistoryTaskEpicTaskSubTask() {
+        historyManager.addHistory(task);
+        historyManager.addHistory(epicTask);
+        historyManager.addHistory(subTask);
     }
 }

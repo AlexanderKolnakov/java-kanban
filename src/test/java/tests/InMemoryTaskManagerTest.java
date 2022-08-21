@@ -280,8 +280,8 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
                 2, Status.NEW, 3);
 
         assertEquals(1, taskManage.showTask(1).getTaskCode(), "Не правильное добавление Task");
-        assertEquals(2, taskManage.showEpicTask(2).getTaskCode(), "Не правильное добавление Task");
-        assertEquals(3, taskManage.showSubTask(3).getTaskCode(), "Не правильное добавление Task");
+        assertEquals(2, taskManage.showEpicTask(2).getTaskCode(), "Не правильное добавление EpicTask");
+        assertEquals(3, taskManage.showSubTask(3).getTaskCode(), "Не правильное добавление SubTask");
     }
     @Test
     public void shouldGetPrioritizedTasks () throws InMemoryTaskManager.IntersectionDataException {
@@ -321,7 +321,8 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
                         LocalDateTime.of(2022, Month.DECEMBER, 2, 0, 0)));
 
         assertEquals("Обнаружено пересечение с уже существующими задачами : \n" +
-                " новая задача началась до завершения уже текущей задачи", thrown.getMessage());
+                " новая задача началась до завершения уже текущей задачи", thrown.getMessage(),
+                "Не обнаружено пересечение задач");
     }
 
     @Test
@@ -340,6 +341,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
                         LocalDateTime.of(2022, Month.DECEMBER, 1, 0, 0)));
 
         assertEquals("Обнаружено пересечение с уже существующими задачами : \n" +
-                " новая задача началась раньше существующей и заканчивается позже начала существующей", thrown.getMessage());
+                " новая задача началась раньше существующей и заканчивается позже начала существующей", thrown.getMessage(),
+                "Не обнаружено пересечение задач");
     }
 }

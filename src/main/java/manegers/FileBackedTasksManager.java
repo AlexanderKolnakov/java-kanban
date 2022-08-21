@@ -23,12 +23,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             codeOfEpicTask = Integer.toString(taskType.getCodeOfEpicTask());
         }
         return task.getTaskCode() + "," + task.getType() + "," + task.getName() + "," + task.getStatus() + "," +
-                task.getTaskDescription() + "," + codeOfEpicTask;
+                task.getTaskDescription() + "," + task.getDuration() + "," + task.getStartTime() + "," + codeOfEpicTask;
     }  // преобразование задачи в строку
 
     public void save() {
         try (Writer fileWriter = new FileWriter(file)) {
-            fileWriter.write("id,type,name,status,description,epic" + "\n");
+            fileWriter.write("id,type,name,status,description,duration,start_time,epic" + "\n");
             for (Task task : dataTask.values()) {
                 fileWriter.write(taskToString(task) + "\n");
             }
@@ -50,15 +50,26 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         switch (taskString[1]) {
             case "TASK":
                 return addTaskID(taskString[2], taskString[4], checkStatus(taskString[3]),
-                        Integer.parseInt(taskString[0]));
+                        Integer.parseInt(taskString[0]), Integer.parseInt(taskString[5]), stringToData(taskString[6]));
             case "EPIC":
-                return addEpicTaskID(taskString[2], taskString[4], Integer.parseInt(taskString[0]));
+                return addEpicTaskID(taskString[2], taskString[4], Integer.parseInt(taskString[0]),
+                        Integer.parseInt(taskString[5]), stringToData(taskString[6]));
             case "SUBTASK":
-                return addSubTaskID(taskString[2], taskString[4], Integer.parseInt(taskString[5]),
-                        checkStatus(taskString[3]), Integer.parseInt(taskString[0]));
+                return addSubTaskID(taskString[2], taskString[4], Integer.parseInt(taskString[7]),
+                        checkStatus(taskString[3]), Integer.parseInt(taskString[0]), Integer.parseInt(taskString[5]),
+                        stringToData(taskString[6]));
         }
         return null;
     }   // создание задачи из строки
+
+    private static LocalDateTime stringToData(String string) {
+        String[] taskStringOne = string.split("-");
+        String[] taskStringTwo = taskStringOne[2].split("T");
+        String[] taskStringThree = taskStringTwo[1].split(":");
+
+        return LocalDateTime.of(Integer.parseInt(taskStringOne[0]), Integer.parseInt(taskStringOne[1]),
+                Integer.parseInt(taskStringTwo[0]), Integer.parseInt(taskStringThree[0]), Integer.parseInt(taskStringThree[1]));
+    }
 
     private static Status checkStatus(String statusString) {
         Status status = Status.NEW;
@@ -284,5 +295,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         List<SubTask> subTasks = super.showSubTaskToEpic(codeOfTask);
         save();
         return subTasks;
+    }
+    @Override
+    public void load() throws IntersectionDataException {
+        loadFromFile(file);
     }
 }

@@ -36,9 +36,8 @@ public class FileBackedTasksManagerTest extends TaskManagerTest <FileBackedTasks
     }
 
     @Test
-    void shouldLoadFromFile() throws InMemoryTaskManager.IntersectionDataException {
+    void shouldLoadFromFile()  {
         taskManage.showTask(1);
-        taskManage.loadFromFile(fileTest);
         List<String> lt = taskManage.showAllTusk();
         assertNotNull(lt, "Список задач не пустой.");
         assertEquals(3, lt.size(), "Не корректная длинна списка задач.");
