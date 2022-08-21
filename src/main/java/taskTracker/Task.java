@@ -10,7 +10,7 @@ public class Task {
     protected long duration = 0;
     protected LocalDateTime startTime = LocalDateTime.now();
 
-    protected TypeOfTask type = TypeOfTask.TASK;
+    protected TypeOfTask type;
 
     public Task(String nameOfTask, String taskDescription, int taskCode, Status status, long duration, LocalDateTime startTime) {
         this.nameOfTask = nameOfTask;
@@ -19,18 +19,20 @@ public class Task {
         this.status = status;
         this.duration = duration;
         this.startTime = startTime;
+        this.type = TypeOfTask.TASK;
     }
     public Task(String nameOfTask, String taskDescription, int taskCode, Status status) {
         this.nameOfTask = nameOfTask;
         this.taskDescription = taskDescription;
         this.taskCode = taskCode;
         this.status = status;
+        this.type = TypeOfTask.TASK;
 
     }
 
     @Override
     public String toString() {
-        return "Task { id задачи - " + taskCode +
+        return type + " { id задачи - " + taskCode +
                 ", Имя задачи'" + nameOfTask + '\'' +
                 ", Описание задачи - '" + taskDescription + '\'' +
                 ", Статус задачи - " + status +
@@ -46,14 +48,14 @@ public class Task {
     public String getName() {
         return nameOfTask;
     }
-    public String renameTask(String newNameOfTask) {
-        return nameOfTask = newNameOfTask;
+    public void renameTask(String newNameOfTask) {
+        nameOfTask = newNameOfTask;
     }
-    public String renameTaskDescription(String newTaskDescription) {
-        return taskDescription = newTaskDescription;
+    public void renameTaskDescription(String newTaskDescription) {
+        taskDescription = newTaskDescription;
     }
-    public Status changeStatus(Status newStatus) {
-        return status = newStatus;
+    public void changeStatus(Status newStatus) {
+        status = newStatus;
     }
     public String getTaskDescription() { return taskDescription; }
     public TypeOfTask getType() { return type; }

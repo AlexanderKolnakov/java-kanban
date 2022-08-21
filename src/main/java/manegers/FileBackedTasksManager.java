@@ -99,7 +99,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         for (Task task : history) {
             numberHistory.append(task.getTaskCode());
             count++;
-            if (!(history.size() == count)) {
+            if (history.size() != count) {
                 numberHistory.append(",");
             }
         }
@@ -108,7 +108,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }  // сохранение истории в строку
 
     void historyFromString(String value) {
-        if (!(value == null)) {
+        if (value != null) {
             List<Integer> integerList = new ArrayList<>();
             String[] historyString = value.split(",");
             for (String s : historyString) {
@@ -249,11 +249,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         SubTask subTask = super.subChangeStatus(codeOfTask, newStatus);
         save();
         return subTask;
-    }
-
-
-    public void load() throws IntersectionDataException {
-        loadFromFile(file);
     }
 
     @Override

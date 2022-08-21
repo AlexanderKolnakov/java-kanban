@@ -1,4 +1,4 @@
-package Tests;
+package tests;
 
 import manegers.InMemoryTaskManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -177,9 +177,9 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
     @Test
     public void shouldUpdateSubTask () {
         taskManage.updateSubTask("New 1", "New 1",
-                3, 1 , Status.DONE);
+                3, 2 , Status.DONE);
         taskManage.updateSubTask("New 1", "New 1",
-                111, 1 , Status.DONE);
+                111, 2 , Status.DONE);
 
         assertNotNull(taskManage, "Список задач не пустой.");
         assertEquals("New 1", taskManage.showSubTask(3).getName(), "Не обновлен SubTask");
@@ -188,9 +188,9 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
     @Test
     public void shouldUpdateSubTaskWithsDataTime () {
         taskManage.updateSubTask("New 1", "New 1",
-                3, 1 , Status.DONE, 1, LocalDateTime.now());
+                3, 2 , Status.DONE, 1, LocalDateTime.now());
         taskManage.updateSubTask("New 1", "New 1",
-                111, 1 , Status.DONE, 1, LocalDateTime.now());
+                111, 2 , Status.DONE, 1, LocalDateTime.now());
 
         assertNotNull(taskManage, "Список задач не пустой.");
         assertEquals("New 1", taskManage.showSubTask(3).getName(), "Не обновлен SubTask");
@@ -299,26 +299,47 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
 
         assertEquals(3, taskManage.getPrioritizedTasks().size(), "Не корректная длинна списка");
         assertEquals("Задача 1", taskManage.getPrioritizedTasks().get(1).getName(),
-                "Не корректное добавление задач в список приоретета задач");
+                "Не корректное добавление задач в список приоритета задач");
         assertEquals("Эпик_Задача 1", taskManage.getPrioritizedTasks().get(2).getName(),
-                "Не корректное добавление задач в список приоретета задач");
+                "Не корректное добавление задач в список приоритета задач");
         assertEquals("Подзадача 1 Эпик_Задачи 2", taskManage.getPrioritizedTasks().get(0).getName(),
-                "Не корректное добавление задач в список приоретета задач");
+                "Не корректное добавление задач в список приоритета задач");
     }
 
-//    @Test
-//    public void shouldValidate() throws InMemoryTaskManager.IntersectionDataException {
-//        manager.deleteAllTask();
-//        manager.deleteAllEpicTask();
-//        manager.deleteAllSubTask();
-//
-//        manager.addTaskID("Задача 1", "2022.01.01", Status.NEW, 1, 9999,
-//                LocalDateTime.of(2022, Month.DECEMBER, 1, 0, 0));
-//        manager.addEpicTaskID("Эпик_Задача 1", "2022.01.02", 2, 99999,
-//                LocalDateTime.of(2022, Month.DECEMBER, 1, 0, 1));
-//        assert;
-//        assertDoesNotThrow(InMemoryTaskManager.IntersectionDataException, "Обнаружено пересечение с уже существующими задачами : \n" +
-//                " новая задача началась до завершения уже текущей задачи");
-//    }
+    @Test
+    void shouldValidateStartBeforeEnd() throws InMemoryTaskManager.IntersectionDataException {
+        taskManage.deleteAllTask();
+        taskManage.deleteAllEpicTask();
+        taskManage.deleteAllSubTask();
+        taskManage.addTaskID("Задача 1", "2022.01.01", Status.NEW, 1, 9999,
+                LocalDateTime.of(2022, Month.DECEMBER, 1, 0, 0));
 
+        InMemoryTaskManager.IntersectionDataException thrown = assertThrows(
+                InMemoryTaskManager.IntersectionDataException.class,
+
+                () -> taskManage.addEpicTaskID("Эпик_Задача 1", "2022.01.02", 2, 99999,
+                        LocalDateTime.of(2022, Month.DECEMBER, 2, 0, 0)));
+
+        assertEquals("Обнаружено пересечение с уже существующими задачами : \n" +
+                " новая задача началась до завершения уже текущей задачи", thrown.getMessage());
+    }
+
+    @Test
+    void shouldValidateEndAfterStart() throws InMemoryTaskManager.IntersectionDataException {
+        taskManage.deleteAllTask();
+        taskManage.deleteAllEpicTask();
+        taskManage.deleteAllSubTask();
+        taskManage.addTaskID("Задача 1", "2022.01.01", Status.NEW, 1, 9999,
+                LocalDateTime.of(2022, Month.DECEMBER, 2, 0, 0));
+
+
+                InMemoryTaskManager.IntersectionDataException thrown = assertThrows(
+                InMemoryTaskManager.IntersectionDataException.class,
+
+                        () -> taskManage.addEpicTaskID("Эпик_Задача 1", "2022.01.02", 2, 99999,
+                        LocalDateTime.of(2022, Month.DECEMBER, 1, 0, 0)));
+
+        assertEquals("Обнаружено пересечение с уже существующими задачами : \n" +
+                " новая задача началась раньше существующей и заканчивается позже начала существующей", thrown.getMessage());
+    }
 }

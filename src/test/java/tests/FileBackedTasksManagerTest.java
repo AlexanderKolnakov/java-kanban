@@ -1,4 +1,4 @@
-package Tests;
+package tests;
 
 import manegers.FileBackedTasksManager;
 import manegers.InMemoryTaskManager;
@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FileBackedTasksManagerTest extends TaskManagerTest <FileBackedTasksManager> {
     File fileTest;
 
-
     @BeforeEach
     void setUpFileBack() throws InMemoryTaskManager.IntersectionDataException {
         fileTest = new File("memoryTaskTest.csv");
@@ -26,8 +25,6 @@ public class FileBackedTasksManagerTest extends TaskManagerTest <FileBackedTasks
         taskManage.addSubTaskID("Подзадача 1 Эпик_Задачи 1", "описание Подзадачи 1",
                 2, Status.NEW, 3);
     }
-
-
     @AfterEach
     void tearDown() {
         assertTrue(fileTest.delete());
@@ -36,17 +33,13 @@ public class FileBackedTasksManagerTest extends TaskManagerTest <FileBackedTasks
     @Disabled
     @Test
     void save() {
-
     }
 
     @Test
     void shouldLoadFromFile() throws InMemoryTaskManager.IntersectionDataException {
         taskManage.showTask(1);
-
         taskManage.loadFromFile(fileTest);
         List<String> lt = taskManage.showAllTusk();
-
-
         assertNotNull(lt, "Список задач не пустой.");
         assertEquals(3, lt.size(), "Не корректная длинна списка задач.");
         assertEquals("Эпик_Задача 1", lt.get(0), "Не корректная длинна списка задач.");

@@ -24,8 +24,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (!dataRequest.isEmpty()) {
             return dataRequest.getTasks();
         }
-        List<Task> nullList = new ArrayList<Task>();
-        return nullList;
+        return Collections.emptyList();
     }
 
     public static class CustomLinkedList<T> {

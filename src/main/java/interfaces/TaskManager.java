@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
+    Task addTask(Task)
     Task addTask(String nameOfTask, String taskDescription, Status status) throws InMemoryTaskManager.IntersectionDataException;
 
     EpicTask addEpicTask(String nameOfTask, String taskDescription) throws InMemoryTaskManager.IntersectionDataException;
