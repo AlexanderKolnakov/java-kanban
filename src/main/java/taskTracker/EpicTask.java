@@ -8,7 +8,7 @@ public class EpicTask extends Task {
 
     ArrayList<SubTask> listOfSubTasks = new ArrayList<>();
 
-    protected LocalDateTime endTime;
+    protected LocalDateTime endTime = LocalDateTime.MAX;
 
 
     public EpicTask(String nameOfTask, String taskDescription, int taskCode) {

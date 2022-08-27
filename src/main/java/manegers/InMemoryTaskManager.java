@@ -112,6 +112,29 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return tuskList;
     }
+    public List<Task> getTasks() {
+        List<Task> tuskList = new ArrayList<>();
+        for (Map.Entry<Integer, EpicTask> pair : dataEpicTask.entrySet()) {
+            tuskList.add(pair.getValue());
+        }
+        for (Map.Entry<Integer, SubTask> pair : dataSubTask.entrySet()) {
+            tuskList.add(pair.getValue());
+        }
+        for (Map.Entry<Integer, Task> pair : dataTask.entrySet()) {
+            tuskList.add(pair.getValue());
+        }
+        return tuskList;
+    }
+
+    public List<Task> getTask() {
+        return new ArrayList<>(dataTask.values());
+    }
+    public List<Task> getSubTask() {
+        return new ArrayList<>(dataSubTask.values());
+    }
+    public List<Task> getEpicTask() {
+        return new ArrayList<>(dataEpicTask.values());
+    }
 
     @Override
     public Task showTask(int codeOfTask) {
@@ -234,6 +257,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public Task updateTask(Task task) {
+        if(!dataTask.containsKey(task.getTaskCode())) {return null;}
+        return dataTask.put(task.getTaskCode(), task);
+    }
+
+    @Override
     public EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode) {
         if(!dataEpicTask.containsKey(taskCode)) {return null;}
         dataEpicTask.get(taskCode).renameTask(newNameOfTask);
@@ -249,6 +278,12 @@ public class InMemoryTaskManager implements TaskManager {
         dataEpicTask.get(taskCode).setDuration(duration);
         dataEpicTask.get(taskCode).setStartTime(startTime);
         return dataEpicTask.get(taskCode);
+    }
+
+    @Override
+    public EpicTask updateEpicTask(EpicTask epicTask) {
+        if(!dataEpicTask.containsKey(epicTask.getTaskCode())) {return null;}
+        return dataEpicTask.put(epicTask.getTaskCode(), epicTask);
     }
 
     @Override
@@ -270,6 +305,13 @@ public class InMemoryTaskManager implements TaskManager {
         dataSubTask.get(taskCode).setStartTime(startTime);
         updateEpicDurationAndStartTime(codeOfEpicTask );
         return dataSubTask.get(taskCode);
+    }
+
+    @Override
+    public SubTask updateSubTask(SubTask subTask) {
+        if(!dataSubTask.containsKey(subTask.getTaskCode())) {return null;}
+        updateEpicDurationAndStartTime(subTask.getCodeOfEpicTask());
+        return dataSubTask.put(subTask.getTaskCode(), subTask);
     }
 
     @Override

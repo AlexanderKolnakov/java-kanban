@@ -46,13 +46,16 @@ public interface TaskManager {
     Task updateTask(String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus);
     Task updateTask (String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus,
                      long duration, LocalDateTime startTime);
+    Task updateTask (Task task);
     EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode);
     EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode,
                             long duration, LocalDateTime startTime);
+    EpicTask updateEpicTask(EpicTask epicTask);
     SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
                           Status newStatus);
     SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
                           Status newStatus, long duration, LocalDateTime startTime);
+    SubTask updateSubTask(SubTask subTask);
 
     List<SubTask> showSubTaskToEpic(int codeOfTask);
 
@@ -66,4 +69,6 @@ public interface TaskManager {
     ArrayList<Task> getPrioritizedTasks();
 
     void load() throws InMemoryTaskManager.IntersectionDataException;
+    List<Task> getTasks();
+
 }
