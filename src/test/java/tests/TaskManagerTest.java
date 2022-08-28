@@ -4,7 +4,7 @@ import interfaces.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-abstract class TaskManagerTest <T extends TaskManager> {
+public abstract class TaskManagerTest <T extends TaskManager> {
     protected T taskManage;
 
     @AfterEach

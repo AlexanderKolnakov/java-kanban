@@ -137,6 +137,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
     }  // восстановление истории из строки
 
+    public Task findTask(int id) {
+
+        if (dataTask.containsKey(id)) {
+            return dataTask.get(id);
+        }
+        if (dataEpicTask.containsKey(id)) {
+            return dataEpicTask.get(id);
+        }
+        if (dataSubTask.containsKey(id)) {
+            return dataSubTask.get(id);
+        }
+        return null;
+    }
+
     @Override
     public Task addTaskID(String nameOfTask, String taskDescription, Status status, int taskCode) throws IntersectionDataException {
         Task task = super.addTaskID(nameOfTask, taskDescription, status, taskCode);
