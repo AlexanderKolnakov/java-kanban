@@ -12,20 +12,15 @@ import java.time.LocalDateTime;
 
 public class Managers {
 
-    public static TaskManager getDefault() {
+    public static TaskManager getDefault() throws IOException, InterruptedException {
 //        TaskManager manager = new FileBackedTasksManager(new File("memoryTask.csv"));
-        TaskManager manager = new HTTPTaskManager(KVServer.PORT);
+        TaskManager manager = new HTTPTaskManager("http://localhost:8079/register");
         return manager;
     }
 
     public static HistoryManager getDefaultHistory() {
         HistoryManager historyManager = new InMemoryHistoryManager();
         return historyManager;
-    }
-
-    public static KVServer getDefaultKVServer() throws IOException {
-        return new KVServer();
-
     }
 
     public static Gson getGsons() {

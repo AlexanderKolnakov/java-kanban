@@ -1,76 +1,47 @@
 package client;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class KVTaskClient {
-    private String url;
-    private String apiToken;
-    private final static String URN_REGISTER = "/register";
-    private final static String URN_LOAD = "/load";
-    private final static String URN_SAVE = "/save";
+    private String apiKey;
+    private int port = 8078;
+    private final HttpClient client = HttpClient.newHttpClient();
 
-    public KVTaskClient(int port) {
-        url = "http://localhost:" + port;
-        apiToken = register(url);
+    public KVTaskClient(String URL) throws IOException, InterruptedException {
+        URI uri = URI.create(URL);
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(uri)
+                .build();
+        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
+        HttpResponse<String> response = client.send(request, handler);    // ОШИБКА
+        apiKey = response.body();
+        System.out.println("Тело ответа " + apiKey);
     }
 
-
-
-    // ОСТАНОВИЛСЯ ТУТ В ПОИСКАХ ОШИБКИ ТЕСТА 1.26.13 ВИДЕО
-
-
-
-
-    private String register(String url) {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url + URN_REGISTER)).GET().build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if(response.statusCode() != 200) {
-                System.out.println("Ошибка при регистрации. Статус код - " + response.statusCode());
-            }
-            return response.body();
-        } catch (Exception exception) {
-            System.out.println("Ошибка при регистрации   ---   register");
-        }
-        return "";
+    public void put(String key, String json) throws IOException, InterruptedException {
+        String URL = "http://localhost:" + this.port + "/save/" + key + "?API_KEY=" + apiKey;
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .uri(URI.create(URL))
+                .build();
+        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
+        HttpResponse<String> response = client.send(request, handler);
+        System.out.println("Status " + response.statusCode());
     }
 
-
-
-    // НЕ ТОЧНО
-
-    public String load(String key) {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + URN_LOAD + "/" +  key+ "/"+ apiToken)).GET().build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if(response.statusCode() != 200) {
-                System.out.println("Ошибка при загрузке. Статус код - " + response.statusCode());
-            }
-            return response.body();
-        } catch (Exception exception) {
-            System.out.println("Ошибка при загрузке");
-        }
-        return "";
-    }
-
-    public void put(String key, String json) {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + URN_SAVE + "/" +  key+ "/"+ apiToken)).POST(body).build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if(response.statusCode() != 200) {
-                System.out.println("Ошибка при сохранении. Статус код - " + response.statusCode());
-            }
-        } catch (Exception exception) {
-            System.out.println("Ошибка при сохранении");
-        }
+    public String load(String key) throws IOException, InterruptedException {
+        String URL = "http://localhost:" + this.port + "/load/" + key + "?API_KEY=" + apiKey;
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(URL))
+                .build();
+        HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
+        HttpResponse<String> response = client.send(request, handler);
+        return response.body();
     }
 }

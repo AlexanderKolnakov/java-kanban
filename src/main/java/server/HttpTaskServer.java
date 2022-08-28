@@ -23,20 +23,11 @@ public class HttpTaskServer {
     private Gson gson;
     private TaskManager taskManager;
 
-    public HttpTaskServer() throws IOException {
-        this(Managers.getDefault());
-    }
-
     public HttpTaskServer(TaskManager taskManager) throws IOException {
         this.taskManager = taskManager;
         gson = Managers.getGsons();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/tasks", this::handler);
-    }
-
-    public static void main(String[] args) throws IOException {
-        HttpTaskServer httpTaskServer = new HttpTaskServer();
-        httpTaskServer.start();
     }
 
     private void handler(HttpExchange httpExchange) throws IOException {
@@ -357,6 +348,11 @@ public class HttpTaskServer {
     public void stop() {
         server.stop(0);
         System.out.println("Остановили сервер на порту " + PORT);
+    }
+
+    public void clear() {
+        taskManager.deleteAllTask();
+        System.out.println("Список всех задач на сервере очищен");
     }
 
     protected String readText(HttpExchange h) throws IOException {

@@ -27,8 +27,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         return Collections.emptyList();
     }
 
+    @Override
+    public void deleteAllHistory() {
+        dataRequest.removeAllT();
+    }
+
     public static class CustomLinkedList<T> {
-        static class Node<E> {
+         static class Node<E> {
             public E task;
             public Node<E> next;
             public Node<E> prev;
@@ -84,8 +89,11 @@ public class InMemoryHistoryManager implements HistoryManager {
                 }
             }
         }
+        public void removeAllT () {
+            nodeMap.clear();
+        }
 
-        private T removeFirstNode (Node<T> node) {
+        private void removeFirstNode (Node<T> node) {
             final T element = node.task;
             final Node<T> next = node.next;
             node.task = null;
@@ -95,10 +103,9 @@ public class InMemoryHistoryManager implements HistoryManager {
                 tail = null;
             else
                 next.prev = null;
-            return element;
         }
 
-        private T removeLastNode (Node<T> node) {
+        private void removeLastNode (Node<T> node) {
             final T element = node.task;
             final Node<T> prev = node.prev;
             node.task = null;
@@ -108,10 +115,9 @@ public class InMemoryHistoryManager implements HistoryManager {
                 head = null;
             else
                 prev.next = null;
-            return element;
         }
 
-        private T removeNode (Node<T> node) {
+        private void removeNode (Node<T> node) {
             final T element = node.task;
             final Node<T> next = node.next;
             final Node<T> prev = node.prev;
@@ -131,7 +137,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
 
             node.task = null;
-            return element;
         }
     }
 }

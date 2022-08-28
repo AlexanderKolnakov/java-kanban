@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
-    File file;
+//    File file;
+    protected String name;
 
-    public FileBackedTasksManager(File file) {
-        this.file = file;
+    public FileBackedTasksManager(String name) {
+        this.name = name;
     }
 
     public String taskToString(Task task) {
@@ -27,7 +28,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }  // преобразование задачи в строку
 
     public void save() {
-        try (Writer fileWriter = new FileWriter(file)) {
+        try (Writer fileWriter = new FileWriter(name)) {
             fileWriter.write("id,type,name,status,description,duration,start_time,epic" + "\n");
             for (Task task : dataTask.values()) {
                 fileWriter.write(taskToString(task) + "\n");
@@ -45,7 +46,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
     }
 
-    private Task fromString(String value) throws IntersectionDataException {
+    public Task fromString(String value) throws IntersectionDataException {
         String[] taskString = value.split(",");
         switch (taskString[1]) {
             case "TASK":
@@ -62,7 +63,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return null;
     }   // создание задачи из строки
 
-    private static LocalDateTime stringToData(String string) {
+    public static LocalDateTime stringToData(String string) {
         String[] taskStringOne = string.split("-");
         String[] taskStringTwo = taskStringOne[2].split("T");
         String[] taskStringThree = taskStringTwo[1].split(":");
@@ -71,7 +72,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 Integer.parseInt(taskStringTwo[0]), Integer.parseInt(taskStringThree[0]), Integer.parseInt(taskStringThree[1]));
     }
 
-    private static Status checkStatus(String statusString) {
+    static Status checkStatus(String statusString) {
         Status status = Status.NEW;
         switch (statusString) {
             case "IN_PROGRESS":
@@ -84,9 +85,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return status;
     }
 
-    public FileBackedTasksManager loadFromFile(File file) throws IntersectionDataException {
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
-        try (Reader fileReader = new FileReader(file)) {
+    public FileBackedTasksManager loadFromFile(String name) throws IntersectionDataException {
+        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(name);
+        try (Reader fileReader = new FileReader(name)) {
             BufferedReader br = new BufferedReader(fileReader);
             while (br.ready()) {
                 String line = br.readLine();
@@ -312,6 +313,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
     @Override
     public void load() throws IntersectionDataException {
-        loadFromFile(file);
+        loadFromFile(name);
     }
+
 }

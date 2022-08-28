@@ -1,46 +1,33 @@
 package tests;
 
+import interfaces.TaskManager;
 import manegers.FileBackedTasksManager;
 import manegers.InMemoryTaskManager;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import taskTracker.EpicTask;
 import taskTracker.Status;
+import taskTracker.SubTask;
+import taskTracker.Task;
 
-import java.io.File;
-import java.util.List;
+import java.nio.file.FileSystems;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTasksManagerTest extends TaskManagerTest <FileBackedTasksManager> {
-    File fileTest;
+//    File fileTest;
+    private Task task;
+    private EpicTask epicTask;
+    private SubTask subTask;
+    private TaskManager taskManager;
 
     @BeforeEach
     void setUpFileBack() throws InMemoryTaskManager.IntersectionDataException {
-        fileTest = new File("memoryTaskTest.csv");
-        taskManage = new FileBackedTasksManager(fileTest);
-        taskManage.addTaskID("Задача 1", "описание Задачи 1", Status.NEW, 1);
-        taskManage.addEpicTaskID("Эпик_Задача 1", "описание Эпик_Задачи 1", 2);
-        taskManage.addSubTaskID("Подзадача 1 Эпик_Задачи 1", "описание Подзадачи 1",
-                2, Status.NEW, 3);
-    }
-    @AfterEach
-    void tearDown() {
-        assertTrue(fileTest.delete());
-    }
-
-    @Disabled
-    @Test
-    void save() {
-    }
-
-    @Test
-    void shouldLoadFromFile()  {
-        taskManage.showTask(1);
-        List<String> lt = taskManage.showAllTusk();
-        assertNotNull(lt, "Список задач не пустой.");
-        assertEquals(3, lt.size(), "Не корректная длинна списка задач.");
-        assertEquals("Эпик_Задача 1", lt.get(0), "Не корректная длинна списка задач.");
+        String s = FileSystems.getDefault().getSeparator();
+        taskManager = new FileBackedTasksManager("http://localhost:8078/register");
+        task = new Task("Задача 1", "Описание задачи 1", 1, Status.NEW);
+        epicTask = new EpicTask("Эпик Задача 1", "Описание эпик задачи 1", 2);
+        subTask = new SubTask("Подзадача 1", "Описание задачи 1", 3, Status.NEW, 2);
+        taskManager.addTask(task);
+        taskManager.addEpicTask(epicTask);
+        taskManager.addSubTask(subTask);
     }
 }

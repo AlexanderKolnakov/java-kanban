@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    HashMap<Integer, Task> dataTask = new HashMap<>();
+    static HashMap<Integer, Task> dataTask = new HashMap<>();
     int taskScore = 1;
-    HashMap<Integer, EpicTask> dataEpicTask = new HashMap<>();
-    HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    static HashMap<Integer, EpicTask> dataEpicTask = new HashMap<>();
+    static HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
+    static HistoryManager historyManager = Managers.getDefaultHistory();
     TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     @Override
@@ -463,4 +463,6 @@ public class InMemoryTaskManager implements TaskManager {
             super(message);
         }
     }
+
+
 }

@@ -56,6 +56,7 @@ class HttTaskServerTest {
 
     @AfterEach
     void stop() {
+        server.clear();
         server.stop();
     }
 
@@ -288,7 +289,7 @@ class HttTaskServerTest {
     void postEpicTasksWithBody() throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks/epic");
-        EpicTask newTask = new EpicTask("Подзадача 2", "Описание подзадачи 2",4);
+        EpicTask newTask = new EpicTask("Эпик задача 2", "Описание Эпик задачи 2",4);
         String json = gson.toJson(newTask);
         final HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
@@ -301,8 +302,8 @@ class HttTaskServerTest {
 
         EpicTask taskResponse = gson.fromJson(response.body(), userType);
 
-        assertNotNull(taskResponse, "Подзадачи не добавлена");
-        assertEquals(4, taskResponse.getTaskCode(), "Подзадача не добавлена");
+        assertNotNull(taskResponse, "Эпик задачи не добавлена");
+        assertEquals(4, taskResponse.getTaskCode(), "Эпик задача не добавлена");
     }
 
     @Test
