@@ -5,9 +5,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.KVServer;
+import taskTracker.EpicTask;
 import taskTracker.Status;
+import taskTracker.SubTask;
 import taskTracker.Task;
-import tests.FileBackedTasksManagerTest;
+import tests.TaskManagerTest;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,13 +18,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-public class HttpTaskManagerTest extends FileBackedTasksManagerTest {
+public class HttpTaskManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     private KVServer server;
+    private Task task;
+    private EpicTask epicTask;
+    private SubTask subTask;
     @BeforeEach
-    private void setUp() throws IOException, InterruptedException {
+    private void setUp() throws IOException, InterruptedException, InMemoryTaskManager.IntersectionDataException {
         server = new KVServer();
         server.start();
         taskManage = new HTTPTaskManager("http://localhost:8078/register");
+        task = new Task("Задача 1", "Описание задачи 1", 1, Status.NEW);
+        epicTask = new EpicTask("Эпик Задача 1", "Описание эпик задачи 1", 2);
+        subTask = new SubTask("Подзадача 1", "Описание задачи 1", 3, Status.NEW, 2);
+        taskManage.addTask(task);
+        taskManage.addEpicTask(epicTask);
+        taskManage.addSubTask(subTask);
+
     }
 
     @AfterEach
@@ -31,7 +43,7 @@ public class HttpTaskManagerTest extends FileBackedTasksManagerTest {
     }
 
     @Test
-    void load() {
+    void load() throws InMemoryTaskManager.IntersectionDataException {
         List<Task> tasks = taskManage.getTasks();
         assertNotNull(tasks, "Задачи не добавлена");
         assertEquals(3, tasks.size(), "Задачи не добавлена");

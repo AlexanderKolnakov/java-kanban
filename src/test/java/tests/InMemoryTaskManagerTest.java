@@ -145,7 +145,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
         assertEquals("New 1", taskManage.showTask(1).getName(), "Не обновлен Task");
     }
     @Test
-    public void shouldUpdateTaskWithsDataTime () {
+    public void shouldUpdateTaskWithsDataTime () throws InMemoryTaskManager.IntersectionDataException {
         taskManage.updateTask("New 1", "New 1",
                 1 , Status.DONE, 1, LocalDateTime.now());
         taskManage.updateTask("New 1", "New 1",
@@ -165,7 +165,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
         assertEquals("New 1", taskManage.showEpicTask(2).getName(), "Не обновлен EpicTask");
     }
     @Test
-    public void shouldUpdateEpicTaskWithsDataTime () {
+    public void shouldUpdateEpicTaskWithsDataTime () throws InMemoryTaskManager.IntersectionDataException {
         taskManage.updateEpicTask("New 1", "New 1",
                 2,1, LocalDateTime.now());
         taskManage.updateEpicTask("New 1", "New 1", 111, 1, LocalDateTime.now());
@@ -186,7 +186,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest <InMemoryTaskManager>{
     }
 
     @Test
-    public void shouldUpdateSubTaskWithsDataTime () {
+    public void shouldUpdateSubTaskWithsDataTime () throws InMemoryTaskManager.IntersectionDataException {
         taskManage.updateSubTask("New 1", "New 1",
                 3, 2 , Status.DONE, 1, LocalDateTime.now());
         taskManage.updateSubTask("New 1", "New 1",

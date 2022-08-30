@@ -16,6 +16,8 @@ public interface TaskManager {
     Task addSubTask(SubTask subTask) throws InMemoryTaskManager.IntersectionDataException;
     Task addEpicTask(EpicTask epicTask) throws InMemoryTaskManager.IntersectionDataException;
 
+    void putTaskInData(Integer ID, Task task) throws InMemoryTaskManager.IntersectionDataException;
+
     List<String> showAllTusk();
 
     Task showTask(int codeOfTask);
@@ -45,16 +47,16 @@ public interface TaskManager {
 
     Task updateTask(String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus);
     Task updateTask (String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus,
-                     long duration, LocalDateTime startTime);
+                     long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
     Task updateTask (Task task);
     EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode);
     EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode,
-                            long duration, LocalDateTime startTime);
+                            long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
     EpicTask updateEpicTask(EpicTask epicTask);
     SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
                           Status newStatus);
     SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
-                          Status newStatus, long duration, LocalDateTime startTime);
+                          Status newStatus, long duration, LocalDateTime startTime) throws InMemoryTaskManager.IntersectionDataException;
     SubTask updateSubTask(SubTask subTask);
 
     List<SubTask> showSubTaskToEpic(int codeOfTask);

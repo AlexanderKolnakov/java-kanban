@@ -51,7 +51,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         }
     }
 
-    public static TaskManager load(String URL) throws IntersectionDataException {
+    public TaskManager load(String URL) {
         String key = "manager";
         TaskManager manager = null;
         String json = null;
@@ -66,9 +66,9 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         for (String s : readTaskFromJson(json)) {
             fillInMaps(s);
         }
-        List<Task> taskList= historyManager.getHistory();
-        for (Task task : taskList) {
-            historyManager.remove(task.getTaskCode());
+        List<Integer> taskList=  getHistory();
+        for (Integer task : taskList) {
+            historyManager.remove(task);
         }
         for (Integer id : readHistoryFromJson(json)) {
             historyManager = new InMemoryHistoryManager();
@@ -90,7 +90,7 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         return tasks;
     }
 
-    protected static void fillInMaps(String string) {
+    protected void fillInMaps(String string) {
         switch (string.split(",")[1]) {
             case "Task":
                 Task task = fromStringer(string);

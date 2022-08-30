@@ -19,6 +19,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,9 +46,12 @@ class HttTaskServerTest {
 
         server = new HttpTaskServer(taskManager);
 
-        task = new Task("Задача 1", "Описание задачи 1", 1, Status.NEW);
-        epicTask = new EpicTask("Эпик Задача 1", "Описание эпик задачи 1", 2);
-        subTask = new SubTask("Подзадача 1", "Описание задачи 1", 3, Status.NEW, 2);
+        task = new Task("Задача 1", "Описание задачи 1", 1,
+                Status.DONE, 10, LocalDateTime.of(2022, 12, 30, 12, 0));
+        epicTask = new EpicTask("Эпик Задача 1", "Описание эпик задачи 1", 2, 10,
+                LocalDateTime.of(2022, 12, 30, 12, 40));
+        subTask = new SubTask("Подзадача 1", "Описание задачи 1", 3,
+                Status.DONE,  2,10, LocalDateTime.of(2022, 12, 30, 12, 20));
         taskManager.addTask(task);
         taskManager.addEpicTask(epicTask);
         taskManager.addSubTask(subTask);
@@ -520,7 +524,7 @@ class HttTaskServerTest {
     }
 
     @Test
-    void getPrioritizedTasks() throws IOException, InterruptedException {
+    void getPrioritizedTasks() throws IOException, InterruptedException{
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
@@ -535,9 +539,9 @@ class HttTaskServerTest {
         ArrayList<Task> history = gson.fromJson(response.body(), userType);
 
         assertNotNull(history, "Список задач пустой");
-        assertEquals(2, history.size(), "Не верное количество задач");
+        assertEquals(3, history.size(), "Не верное количество задач");
         assertEquals(history.get(0).getTaskCode(), task.getTaskCode(), "Не верный порядок задач");
-        assertEquals(history.get(1).getTaskCode(), epicTask.getTaskCode(), "Не верный порядок задач");
+        assertEquals(history.get(2).getTaskCode(), epicTask.getTaskCode(), "Не верный порядок задач");
     }
 
     @Test

@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    static HashMap<Integer, Task> dataTask = new HashMap<>();
+    HashMap<Integer, Task> dataTask = new HashMap<>();
     int taskScore = 1;
-    static HashMap<Integer, EpicTask> dataEpicTask = new HashMap<>();
-    static HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
-    static HistoryManager historyManager = Managers.getDefaultHistory();
+    HashMap<Integer, EpicTask> dataEpicTask = new HashMap<>();
+    HashMap<Integer, SubTask> dataSubTask = new HashMap<>();
+    HistoryManager historyManager = Managers.getDefaultHistory();
     TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     @Override
@@ -96,6 +96,12 @@ public class InMemoryTaskManager implements TaskManager {
                 duration, startTime);
         addSubTask(subTask);
         return subTask;
+    }
+    @Override
+    public void putTaskInData(Integer ID, Task task) throws IntersectionDataException {
+        dataTask.put(ID, task);
+        taskScore++;
+        validate(task);
     }
 
     @Override
@@ -248,11 +254,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task updateTask (String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus,
-                            long duration, LocalDateTime startTime) {
+                            long duration, LocalDateTime startTime) throws IntersectionDataException {
         if(!dataTask.containsKey(taskCode)) {return null;}
         updateTask(newNameOfTask, newTaskDescription, taskCode, newStatus);
         dataTask.get(taskCode).setDuration(duration);
         dataTask.get(taskCode).setStartTime(startTime);
+        validate(dataTask.get(taskCode));
         return dataTask.get(taskCode);
     }
 
@@ -272,11 +279,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode,
-                                   long duration, LocalDateTime startTime) {
+                                   long duration, LocalDateTime startTime) throws IntersectionDataException {
         if(!dataEpicTask.containsKey(taskCode)) {return null;}
         updateEpicTask(newNameOfTask, newTaskDescription, taskCode);
         dataEpicTask.get(taskCode).setDuration(duration);
         dataEpicTask.get(taskCode).setStartTime(startTime);
+        validate(dataEpicTask.get(taskCode));
         return dataEpicTask.get(taskCode);
     }
 
@@ -298,12 +306,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask,
-                                 Status newStatus, long duration, LocalDateTime startTime) {
+                                 Status newStatus, long duration, LocalDateTime startTime) throws IntersectionDataException {
         if(!dataSubTask.containsKey(taskCode)) {return null;}
         updateSubTask(newNameOfSubTask, newTaskDescription, taskCode, codeOfEpicTask, newStatus);
         dataSubTask.get(taskCode).setDuration(duration);
         dataSubTask.get(taskCode).setStartTime(startTime);
         updateEpicDurationAndStartTime(codeOfEpicTask );
+        validate(dataSubTask.get(taskCode));
         return dataSubTask.get(taskCode);
     }
 

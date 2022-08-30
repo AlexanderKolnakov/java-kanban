@@ -72,6 +72,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 Integer.parseInt(taskStringTwo[0]), Integer.parseInt(taskStringThree[0]), Integer.parseInt(taskStringThree[1]));
     }
 
+    @Override
+    public ArrayList<Task> getPrioritizedTasks() {
+        ArrayList<Task> taskArrayList = super.getPrioritizedTasks();
+        save();
+        return taskArrayList;
+    }
+
     static Status checkStatus(String statusString) {
         Status status = Status.NEW;
         switch (statusString) {
@@ -316,4 +323,51 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         loadFromFile(name);
     }
 
+    @Override
+    public void putTaskInData(Integer ID, Task task) throws IntersectionDataException {
+        super.putTaskInData(ID, task);
+        save();
+    }
+
+    @Override
+    public Task addTask(Task task) throws IntersectionDataException {
+        Task task1 = super.addTask(task);
+        save();
+        return task1;
+    }
+
+    @Override
+    public Task addSubTask(SubTask subTask) throws IntersectionDataException {
+        Task subTask1 = super.addSubTask(subTask);
+        save();
+        return subTask1;
+    }
+
+    @Override
+    public Task addEpicTask(EpicTask epicTask) throws IntersectionDataException {
+        Task epicTask1 =  super.addEpicTask(epicTask);
+        save();
+        return epicTask1;
+    }
+
+    @Override
+    public Task updateTask(String newNameOfTask, String newTaskDescription, int taskCode, Status newStatus, long duration, LocalDateTime startTime) throws IntersectionDataException {
+        Task taskList = super.updateTask(newNameOfTask, newTaskDescription, taskCode, newStatus, duration, startTime);
+        save();
+        return taskList;
+    }
+
+    @Override
+    public EpicTask updateEpicTask(String newNameOfTask, String newTaskDescription, int taskCode, long duration, LocalDateTime startTime) throws IntersectionDataException {
+        EpicTask epicTask = super.updateEpicTask(newNameOfTask, newTaskDescription, taskCode, duration, startTime);
+        save();
+        return epicTask;
+    }
+
+    @Override
+    public SubTask updateSubTask(String newNameOfSubTask, String newTaskDescription, int taskCode, int codeOfEpicTask, Status newStatus, long duration, LocalDateTime startTime) throws IntersectionDataException {
+        SubTask subTask = super.updateSubTask(newNameOfSubTask, newTaskDescription, taskCode, codeOfEpicTask, newStatus, duration, startTime);
+        save();
+        return subTask;
+    }
 }
